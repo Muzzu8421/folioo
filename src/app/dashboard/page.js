@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   LayoutDashboard,
   FileText,
@@ -651,7 +653,7 @@ function DashboardContent({ showBanner, setShowBanner }) {
 
 // Settings Content Component
 function SettingsContent() {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("profile");
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -659,21 +661,27 @@ function SettingsContent() {
 
   // Mock user data
   const [userData, setUserData] = useState({
-    name: session?.user?.name || "John Doe",
+    fullname: session?.user?.fullname || "John Doe",
     username: session?.user?.name || "johndoe",
     email: session?.user?.email || "john@example.com",
     emailVerified: false,
-    profilePicture: session?.user?.image ||
+    profilePicture:
+      session?.user?.profilePicture ||
       "https://images.unsplash.com/photo-1672685667592-0392f458f46f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
     hasPassword: true,
     oauthProviders: [
-      { provider: session?.user?.oauthProviders?.[0]?.provider || "google", providerId: session?.user?.oauthProviders?.[0]?.providerId || "google-123", connectedAt: new Date() },
+      {
+        provider: session?.user?.oauthProviders?.[0]?.provider || "google",
+        providerId:
+          session?.user?.oauthProviders?.[0]?.providerId || "google-123",
+        connectedAt: new Date(),
+      },
     ],
   });
-
   const [formData, setFormData] = useState({
-    name: userData.name,
+    fullname: userData.fullname,
     username: userData.username,
+    profilePicture: userData.profilePicture,
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -708,20 +716,24 @@ function SettingsContent() {
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserData({
-          ...userData,
-          profilePicture: reader.result,
-        });
-      };
-      reader.readAsDataURL(file);
-      setFormData({
-        ...formData,
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setUserData((prev) => ({
+        ...prev,
         profilePicture: reader.result,
-      });
-    }
+      }));
+
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: reader.result,
+      }));
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleVerifyEmail = () => {
@@ -741,25 +753,64 @@ function SettingsContent() {
   };
 
   const handlesubmit = async () => {
-  try {
-    const res = await fetch("/api/user/update", {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({formData}),
-    });
+      headers: myHeaders,
+      body: JSON.stringify({ email: userData.email, ...formData }),
+      redirect: "follow",
+    };
+
+    fetch("/api/user/update", requestOptions);
+
+    const res = await fetch("/api/user/update", requestOptions);
 
     const data = await res.json();
 
-    console.log("User updated:", data);
-  } catch (err) {
-    console.error(err);
-  }
-};
+    if (data.success === false) {
+      toast.error(data.error || "Failed to update profile", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }else if (data.success === true) {
+    toast.success("Profile updated successfully!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+    }
+  };
 
   return (
     <div className="max-w-4xl">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {/* Tabs */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="border-b border-gray-200">
@@ -843,8 +894,8 @@ function SettingsContent() {
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="fullname"
+                    value={formData.fullname}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
                     placeholder="Enter your full name"

@@ -26,6 +26,16 @@ const authoptions = {
           await User.create({
             email: user.email,
             username: user.email.split("@")[0],
+            fullname: user.email.split("@")[0],
+            profilePicture: null,
+            emailVerified: false,
+            oauthProviders: [
+              {
+                provider: "github",
+                providerId: user.id,
+                connectedAt: new Date(),
+              },
+            ],
           });
         }
       }
@@ -33,12 +43,14 @@ const authoptions = {
       // Sigin for Google users same as GitHub users but with different provider check
       if (account.provider === "google") {
         await connectDb();
-        console.log("Google user signing in:", user.email);
         const currentUser = await User.findOne({ email: user.email });
         if (!currentUser) {
           await User.create({
             email: user.email,
             username: user.email.split("@")[0],
+            fullname: user.email.split("@")[0],
+            profilePicture: null,
+            emailVerified: false,
             oauthProviders: [
               {
                 provider: "google",
@@ -66,7 +78,9 @@ const authoptions = {
       await connectDb();
       const dbUser = await User.findOne({ email: session.user.email });
       session.user.name = dbUser.username;
-      session.user.oauthProviders = token.oauthProviders;
+      session.user.fullname = dbUser.fullname;
+      session.user.profilePicture = dbUser.profilePicture;
+      session.user.verified = dbUser.emailVerified;
       return session;
     },
   },
