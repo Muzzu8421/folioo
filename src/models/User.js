@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -33,6 +33,8 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  verificationToken: String,
+  verificationTokenExpires: Date,
   oauthProviders: [{
     provider: {
       type: String,
@@ -47,6 +49,17 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+userSchema.methods.getVerificationToken = function() {
+  const token = crypto.randomBytes(20).toString('hex');
+  this.verificationTokenExpires = Date.now() + 900000;
+
+  //hash the token before saving to the database
+  const hash = crypto.createHash('sha256').update(token).digest('hex');
+  this.verificationToken = hash;
+
+  return token;
+}
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 

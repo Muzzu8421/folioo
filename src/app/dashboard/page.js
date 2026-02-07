@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -156,7 +156,7 @@ export default function Dashboard({ onNavigate }) {
           <NavItem
             icon={<LogOut className="w-5 h-5" />}
             label="Logout"
-            onClick={() => onNavigate("home")}
+            onClick={() => signOut()}
           />
         </div>
       </aside>
@@ -361,7 +361,7 @@ export default function Dashboard({ onNavigate }) {
                   label="Logout"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
-                    onNavigate("home");
+                    signOut();
                   }}
                 />
               </div>
@@ -781,18 +781,18 @@ function SettingsContent() {
         theme: "light",
         transition: Bounce,
       });
-    }else if (data.success === true) {
-    toast.success("Profile updated successfully!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    } else if (data.success === true) {
+      toast.success("Profile updated successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -939,7 +939,7 @@ function SettingsContent() {
                         Verified
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#f59e0b] bg-opacity-10 text-[#f59e0b] rounded-xl text-sm font-semibold">
+                      <span className="text-white inline-flex items-center gap-2 px-4 py-2 bg-[#f59e0b] bg-opacity-10 rounded-xl text-sm font-semibold">
                         <AlertCircle className="w-4 h-4" />
                         Not Verified
                       </span>
@@ -950,13 +950,20 @@ function SettingsContent() {
                 <div className="flex justify-end gap-3 pt-4">
                   <button
                     type="button"
-                    className="px-6 py-3 border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                    className="px-6 cursor-pointer py-3 border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      setFormData({
+                        fullname: userData.fullname,
+                        username: userData.username,
+                        profilePicture: userData.profilePicture,
+                      });
+                    }}
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handlesubmit}
-                    className="px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                    className="cursor-pointer px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                   >
                     Save Changes
                   </button>

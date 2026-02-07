@@ -3,6 +3,7 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import connectDb from "../../../../../db/connectdb";
 import User from "@/models/User";
+import { SendEmail } from "../../../../../utils/SendEmail";
 
 const authoptions = {
   providers: [
@@ -21,9 +22,9 @@ const authoptions = {
       // Only create a user in the database if they are signing in with GitHub, as Google users will be handled differently
       if (account.provider === "github") {
         await connectDb();
-        const currentUser = await User.findOne({ email: user.email });
+        let currentUser = await User.findOne({ email: user.email });
         if (!currentUser) {
-          await User.create({
+          currentUser = await User.create({
             email: user.email,
             username: user.email.split("@")[0],
             fullname: user.email.split("@")[0],
@@ -37,20 +38,32 @@ const authoptions = {
               },
             ],
           });
+          const token = currentUser.getVerificationToken();
+          await currentUser.save();
+          // Here you would send the verification email to the user with the token
+          const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
+          // Example of sending verification email using SendEmail utility function
+          await SendEmail(
+            currentUser.email,
+            "Verify your email",
+            `<p>Please click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+          );
         }
+        return true;
       }
 
       // Sigin for Google users same as GitHub users but with different provider check
       if (account.provider === "google") {
         await connectDb();
-        const currentUser = await User.findOne({ email: user.email });
+        let currentUser = await User.findOne({ email: user.email });
         if (!currentUser) {
-          await User.create({
+          currentUser = await User.create({
             email: user.email,
             username: user.email.split("@")[0],
             fullname: user.email.split("@")[0],
             profilePicture: null,
             emailVerified: false,
+
             oauthProviders: [
               {
                 provider: "google",
@@ -60,13 +73,25 @@ const authoptions = {
             ],
           });
         }
-      }
+        const token = currentUser.getVerificationToken();
+        await currentUser.save();
 
+        // Here you would send the verification email to the user with the token
+        const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
+
+        // Example of sending verification email using SendEmail utility function
+        await SendEmail(
+          currentUser.email,
+          "Verify your email",
+          `<p>Please click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+        );
+        console.log("verification email sent to:", currentUser.email);
+      }
       return true;
     },
 
     async jwt({ token }) {
-      connectDb();
+      await connectDb();
       const dbUser = await User.findOne({ email: token.email });
       if (dbUser) {
         token.oauthProviders = dbUser.oauthProviders || [];
