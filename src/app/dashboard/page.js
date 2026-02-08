@@ -659,16 +659,16 @@ function SettingsContent() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Mock user data
+  // Initialize user data from session or use defaults
   const [userData, setUserData] = useState({
     fullname: session?.user?.fullname || "John Doe",
     username: session?.user?.name || "johndoe",
     email: session?.user?.email || "john@example.com",
-    emailVerified: false,
+    emailVerified: session?.user?.verified || false,
     profilePicture:
       session?.user?.profilePicture ||
       "https://images.unsplash.com/photo-1672685667592-0392f458f46f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
-    hasPassword: true,
+    hasPassword: session?.user?.hasPassword,
     oauthProviders: [
       {
         provider: session?.user?.oauthProviders?.[0]?.provider || "google",
@@ -678,6 +678,7 @@ function SettingsContent() {
       },
     ],
   });
+  console.log(userData.hasPassword);
   const [formData, setFormData] = useState({
     fullname: userData.fullname,
     username: userData.username,
@@ -709,9 +710,50 @@ function SettingsContent() {
     console.log("Update profile:", formData);
   };
 
-  const handlePasswordUpdate = (e) => {
-    e.preventDefault();
-    console.log("Update password:", passwordData);
+  const handlePasswordUpdate = async () => {
+    if (!userData.hasPassword && passwordData.newPassword === passwordData.confirmPassword) {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({ email: userData.email, currentPassword: passwordData.currentPassword || null, newPassword: passwordData.newPassword }),
+        redirect: "follow",
+      };
+
+      fetch("/api/user/update-password", requestOptions);
+
+      const res = await fetch("/api/user/update-password", requestOptions);
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        toast.error(data.error || "Failed to update password", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else if (data.success === true) {
+        toast.success("Password updated successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    }
   };
 
   const handleProfilePictureChange = (e) => {
@@ -732,24 +774,59 @@ function SettingsContent() {
         profilePicture: reader.result,
       }));
     };
-
     reader.readAsDataURL(file);
   };
 
-  const handleVerifyEmail = () => {
-    console.log("Send verification email");
-  };
+  const handleVerifyEmail = async () => {
+    try {
+      const res = await fetch(`/api/resend-verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userData.email }),
+      });
 
-  const handleConnectProvider = (provider) => {
-    console.log("Connect provider:", provider);
-  };
+      const data = await res.json();
 
-  const handleDisconnectProvider = (provider) => {
-    console.log("Disconnect provider:", provider);
-  };
-
-  const isProviderConnected = (provider) => {
-    return userData.oauthProviders.some((p) => p.provider === provider);
+      if (res.ok) {
+        console.log(data);
+        toast.success(data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else {
+        toast.warn(data.message || "Failed to send verification email", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    } catch (error) {
+      toast.error("An error occurred while verifying email", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
 
   const handlesubmit = async () => {
@@ -798,19 +875,6 @@ function SettingsContent() {
 
   return (
     <div className="max-w-4xl">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       {/* Tabs */}
       <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="border-b border-gray-200">
@@ -934,7 +998,7 @@ function SettingsContent() {
                       {userData.email}
                     </div>
                     {userData.emailVerified ? (
-                      <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#10b981] bg-opacity-10 text-[#10b981] rounded-xl text-sm font-semibold">
+                      <span className="text-white inline-flex items-center gap-2 px-4 py-2 bg-[#10b981] bg-opacity-10 text-[#10b981] rounded-xl text-sm font-semibold">
                         <Check className="w-4 h-4" />
                         Verified
                       </span>
@@ -992,7 +1056,7 @@ function SettingsContent() {
                       </p>
                       <button
                         onClick={handleVerifyEmail}
-                        className="px-6 py-2 bg-[#f59e0b] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                        className="cursor-pointer px-6 py-2 bg-[#4f46e5] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                       >
                         Send Verification Email
                       </button>
@@ -1002,7 +1066,7 @@ function SettingsContent() {
               )}
 
               {/* Change Password */}
-              {userData.hasPassword && (
+              {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Change Password
@@ -1018,18 +1082,27 @@ function SettingsContent() {
                           name="currentPassword"
                           value={passwordData.currentPassword}
                           onChange={handlePasswordChange}
+                          disabled={!userData.hasPassword}
                           className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
-                          placeholder="Enter current password"
+                          placeholder={
+                            !userData.hasPassword
+                              ? "Set a password first"
+                              : "Enter current password"
+                          }
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                         >
-                          {showPassword ? (
-                            <EyeOff className="w-5 h-5" />
+                          {userData.hasPassword ? (
+                            showPassword ? (
+                              <EyeOff className="w-5 h-5" />
+                            ) : (
+                              <Eye className="w-5 h-5" />
+                            )
                           ) : (
-                            <Eye className="w-5 h-5" />
+                            <span></span>
                           )}
                         </button>
                       </div>
@@ -1104,132 +1177,7 @@ function SettingsContent() {
                     </div>
                   </form>
                 </div>
-              )}
-
-              {/* Connected Accounts */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Connected Accounts
-                </h3>
-                <div className="space-y-4">
-                  {/* Google */}
-                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center">
-                        <svg className="w-6 h-6" viewBox="0 0 24 24">
-                          <path
-                            fill="#4285F4"
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                          />
-                          <path
-                            fill="#34A853"
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                          />
-                          <path
-                            fill="#FBBC05"
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                          />
-                          <path
-                            fill="#EA4335"
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">Google</p>
-                        <p className="text-sm text-gray-500">
-                          {isProviderConnected("google")
-                            ? "Connected"
-                            : "Not connected"}
-                        </p>
-                      </div>
-                    </div>
-                    {isProviderConnected("google") ? (
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981] bg-opacity-10 text-[#10b981] rounded-full text-sm font-semibold">
-                          <Check className="w-4 h-4" />
-                          Connected
-                        </span>
-                        <button
-                          onClick={() => handleDisconnectProvider("google")}
-                          className="px-4 py-2 text-[#ef4444] hover:bg-[#ef4444] hover:bg-opacity-10 rounded-lg font-semibold transition-all"
-                        >
-                          Disconnect
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleConnectProvider("google")}
-                        className="px-6 py-2 border border-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                      >
-                        Connect
-                      </button>
-                    )}
-                  </div>
-
-                  {/* GitHub */}
-                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
-                        <svg
-                          className="w-6 h-6 text-white"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">GitHub</p>
-                        <p className="text-sm text-gray-500">
-                          {isProviderConnected("github")
-                            ? "Connected"
-                            : "Not connected"}
-                        </p>
-                      </div>
-                    </div>
-                    {isProviderConnected("github") ? (
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#10b981] bg-opacity-10 text-[#10b981] rounded-full text-sm font-semibold">
-                          <Check className="w-4 h-4" />
-                          Connected
-                        </span>
-                        <button
-                          onClick={() => handleDisconnectProvider("github")}
-                          className="px-4 py-2 text-[#ef4444] hover:bg-[#ef4444] hover:bg-opacity-10 rounded-lg font-semibold transition-all"
-                        >
-                          Disconnect
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleConnectProvider("github")}
-                        className="px-6 py-2 border border-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                      >
-                        Connect
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {!userData.hasPassword &&
-                  userData.oauthProviders.length > 0 && (
-                    <div className="mt-4 p-4 bg-[#3b82f6] bg-opacity-10 border border-[#3b82f6] border-opacity-20 rounded-xl">
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-[#3b82f6] flex-shrink-0 mt-0.5" />
-                        <p className="text-sm text-gray-700">
-                          You&apos;re signed in with{" "}
-                          {userData.oauthProviders[0].provider}. To add password
-                          login, set a password in the security settings.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-              </div>
+              }
             </div>
           )}
         </div>

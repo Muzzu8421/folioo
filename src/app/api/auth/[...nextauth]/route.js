@@ -3,7 +3,8 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import connectDb from "../../../../../db/connectdb";
 import User from "@/models/User";
-import { SendEmail } from "../../../../../utils/SendEmail";
+import { SendEmail } from "@/utils/SendEmail";
+import { EmailTemplate } from "@/utils/EmailTemplate";
 
 const authoptions = {
   providers: [
@@ -46,7 +47,7 @@ const authoptions = {
           await SendEmail(
             currentUser.email,
             "Verify your email",
-            `<p>Please click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+            EmailTemplate(verificationUrl, currentUser.fullname),
           );
         }
         return true;
@@ -83,9 +84,8 @@ const authoptions = {
         await SendEmail(
           currentUser.email,
           "Verify your email",
-          `<p>Please click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+          EmailTemplate(verificationUrl, currentUser.fullname),
         );
-        console.log("verification email sent to:", currentUser.email);
       }
       return true;
     },
@@ -106,6 +106,7 @@ const authoptions = {
       session.user.fullname = dbUser.fullname;
       session.user.profilePicture = dbUser.profilePicture;
       session.user.verified = dbUser.emailVerified;
+      session.user.hasPassword = !!dbUser.password;
       return session;
     },
   },
