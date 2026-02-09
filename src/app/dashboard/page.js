@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   LayoutDashboard,
@@ -43,6 +43,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import Loader from "@/components/Loader";
 
 // Mock data for the chart
 const chartData = [
@@ -658,6 +659,7 @@ function SettingsContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize user data from session or use defaults
   const [userData, setUserData] = useState({
@@ -666,7 +668,7 @@ function SettingsContent() {
     email: session?.user?.email || "john@example.com",
     emailVerified: session?.user?.verified || false,
     profilePicture:
-      session?.user?.profilePicture ||
+      session?.user?.image ||
       "https://images.unsplash.com/photo-1672685667592-0392f458f46f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
     hasPassword: session?.user?.hasPassword,
     oauthProviders: [
@@ -678,7 +680,7 @@ function SettingsContent() {
       },
     ],
   });
-  console.log(userData.hasPassword);
+  console.log("User Data:", userData.profilePicture);
   const [formData, setFormData] = useState({
     fullname: userData.fullname,
     username: userData.username,
@@ -698,35 +700,60 @@ function SettingsContent() {
     });
   };
 
-  const handlePasswordChange = (e) => {
-    setPasswordData({
-      ...passwordData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleProfileUpdate = (e) => {
     e.preventDefault();
     console.log("Update profile:", formData);
   };
 
   const handlePasswordUpdate = async () => {
-    if (!userData.hasPassword && passwordData.newPassword === passwordData.confirmPassword) {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+    // Validate passwords match
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("Passwords do not match", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return;
+    }
 
-      const requestOptions = {
+    // Validate password length
+    if (passwordData.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters long", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/user/update-password", {
         method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify({ email: userData.email, currentPassword: passwordData.currentPassword || null, newPassword: passwordData.newPassword }),
-        redirect: "follow",
-      };
-
-      fetch("/api/user/update-password", requestOptions);
-
-      const res = await fetch("/api/user/update-password", requestOptions);
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userData.email,
+          currentPassword: passwordData.currentPassword || null,
+          newPassword: passwordData.newPassword,
+        }),
+      });
 
       const data = await res.json();
+
+      setIsLoading(false);
 
       if (data.success === false) {
         toast.error(data.error || "Failed to update password", {
@@ -752,7 +779,26 @@ function SettingsContent() {
           theme: "light",
           transition: Bounce,
         });
+        setUserData((prev) => ({ ...prev, hasPassword: true }));
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("An error occurred while updating password", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -779,6 +825,7 @@ function SettingsContent() {
 
   const handleVerifyEmail = async () => {
     try {
+      setIsLoading(true);
       const res = await fetch(`/api/resend-verification`, {
         method: "POST",
         headers: {
@@ -790,7 +837,7 @@ function SettingsContent() {
       const data = await res.json();
 
       if (res.ok) {
-        console.log(data);
+        setIsLoading(false);
         toast.success(data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -803,6 +850,7 @@ function SettingsContent() {
           transition: Bounce,
         });
       } else {
+        setIsLoading(false);
         toast.warn(data.message || "Failed to send verification email", {
           position: "top-right",
           autoClose: 5000,
@@ -816,6 +864,7 @@ function SettingsContent() {
         });
       }
     } catch (error) {
+      setIsLoading(false);
       toast.error("An error occurred while verifying email", {
         position: "top-right",
         autoClose: 5000,
@@ -830,36 +879,53 @@ function SettingsContent() {
   };
 
   const handlesubmit = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    setIsLoading(true);
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: JSON.stringify({ email: userData.email, ...formData }),
-      redirect: "follow",
-    };
+    try {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    fetch("/api/user/update", requestOptions);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({ email: userData.email, ...formData }),
+        redirect: "follow",
+      };
 
-    const res = await fetch("/api/user/update", requestOptions);
+      const res = await fetch("/api/user/update", requestOptions);
+      const data = await res.json();
 
-    const data = await res.json();
-
-    if (data.success === false) {
-      toast.error(data.error || "Failed to update profile", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-    } else if (data.success === true) {
-      toast.success("Profile updated successfully!", {
+      if (data.success === false) {
+        setIsLoading(false);
+        toast.error(data.error || "Failed to update profile", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else if (data.success === true) {
+        setIsLoading(false);
+        setUserData((prev) => ({ ...prev, ...formData }));
+        toast.success("Profile updated successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("An error occurred while updating profile", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -1027,9 +1093,10 @@ function SettingsContent() {
                   </button>
                   <button
                     onClick={handlesubmit}
+                    disabled={isLoading}
                     className="cursor-pointer px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
                   >
-                    Save Changes
+                    {isLoading ? <Loader /> : "Save Changes"}
                   </button>
                 </div>
               </form>
@@ -1071,7 +1138,7 @@ function SettingsContent() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Change Password
                   </h3>
-                  <form onSubmit={handlePasswordUpdate} className="space-y-4">
+                  <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         Current Password
@@ -1079,9 +1146,13 @@ function SettingsContent() {
                       <div className="relative">
                         <input
                           type={showPassword ? "text" : "password"}
-                          name="currentPassword"
                           value={passwordData.currentPassword}
-                          onChange={handlePasswordChange}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              currentPassword: e.target.value,
+                            })
+                          }
                           disabled={!userData.hasPassword}
                           className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
                           placeholder={
@@ -1115,9 +1186,13 @@ function SettingsContent() {
                       <div className="relative">
                         <input
                           type={showNewPassword ? "text" : "password"}
-                          name="newPassword"
                           value={passwordData.newPassword}
-                          onChange={handlePasswordChange}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              newPassword: e.target.value,
+                            })
+                          }
                           className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
                           placeholder="Enter new password"
                         />
@@ -1145,9 +1220,13 @@ function SettingsContent() {
                       <div className="relative">
                         <input
                           type={showConfirmPassword ? "text" : "password"}
-                          name="confirmPassword"
                           value={passwordData.confirmPassword}
-                          onChange={handlePasswordChange}
+                          onChange={(e) =>
+                            setPasswordData({
+                              ...passwordData,
+                              confirmPassword: e.target.value,
+                            })
+                          }
                           className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
                           placeholder="Confirm new password"
                         />
@@ -1169,13 +1248,15 @@ function SettingsContent() {
 
                     <div className="flex justify-end pt-2">
                       <button
-                        type="submit"
-                        className="px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+                        type="button"
+                        onClick={handlePasswordUpdate}
+                        disabled={isLoading}
+                        className="px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Update Password
+                        {isLoading ? <Loader /> : "Update Password"}
                       </button>
                     </div>
-                  </form>
+                  </div>
                 </div>
               }
             </div>

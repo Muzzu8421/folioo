@@ -15,6 +15,11 @@ const authoptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          scope: "openid email profile",
+        },
+      },
     }),
   ],
 
@@ -62,7 +67,7 @@ const authoptions = {
             email: user.email,
             username: user.email.split("@")[0],
             fullname: user.email.split("@")[0],
-            profilePicture: null,
+            profilePicture: user.image || null,
             emailVerified: false,
 
             oauthProviders: [
@@ -73,6 +78,11 @@ const authoptions = {
               },
             ],
           });
+        } else {
+          if (user.image && currentUser.profilePicture !== user.image) {
+            currentUser.profilePicture = user.image;
+            await currentUser.save();
+          }
         }
         const token = currentUser.getVerificationToken();
         await currentUser.save();
@@ -104,7 +114,7 @@ const authoptions = {
       const dbUser = await User.findOne({ email: session.user.email });
       session.user.name = dbUser.username;
       session.user.fullname = dbUser.fullname;
-      session.user.profilePicture = dbUser.profilePicture;
+      session.user.image = dbUser.profilePicture || session.user.image;
       session.user.verified = dbUser.emailVerified;
       session.user.hasPassword = !!dbUser.password;
       return session;

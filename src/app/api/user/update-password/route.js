@@ -12,7 +12,7 @@ export async function POST(request) {
     // Validate input
     if (!email || !newPassword) {
       return NextResponse.json(
-        { error: "Email and new password are required" },
+        { success: false, error: "Email and new password are required" },
         { status: 400 },
       );
     }
@@ -20,7 +20,7 @@ export async function POST(request) {
     // basic password validation
     if (typeof newPassword !== "string" || newPassword.length < 6) {
       return NextResponse.json(
-        { error: "New password must be at least 6 characters" },
+        { success: false, error: "New password must be at least 6 characters" },
         { status: 400 },
       );
     }
@@ -28,7 +28,7 @@ export async function POST(request) {
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
     }
 
     const hasPassword = !!user.password;
@@ -39,7 +39,7 @@ export async function POST(request) {
       user.password = hashed;
       await user.save();
       return NextResponse.json(
-        { message: "Password set successfully" },
+        { success: true, message: "Password set successfully" },
         { status: 200 },
       );
     }
@@ -47,14 +47,14 @@ export async function POST(request) {
     // For users with a password, verify current password
     if (!currentPassword) {
       return NextResponse.json(
-        { error: "Current password is required" },
+        { success: false, error: "Current password is required" },
         { status: 400 },
       );
     }
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return NextResponse.json(
-        { error: "Current password is incorrect" },
+        { success: false, error: "Current password is incorrect" },
         { status: 401 },
       );
     }
@@ -62,13 +62,13 @@ export async function POST(request) {
     user.password = newhashed;
     await user.save();
     return NextResponse.json(
-      { message: "Password updated successfully" },
+      { success: true, message: "Password updated successfully" },
       { status: 200 },
     );
   } catch (err) {
     console.error("Error updating password:", err);
     return NextResponse.json(
-      { error: "Failed to update password" },
+      { success: false, error: "Failed to update password" },
       { status: 500 },
     );
   }
