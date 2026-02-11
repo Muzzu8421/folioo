@@ -1,10 +1,30 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ResumeList from "./ResumeList";
 import { Upload, FileText, Sparkles } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function ResumeManager() {
+  const { data: session } = useSession();
   const [resumes, setResumes] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/get-resumes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({ email: session.user.email }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.resumes);
+        setResumes(data.resumes);
+      })
+      .catch((error) => {
+        console.error("Error extracting resume:", error);
+      });
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -17,6 +37,7 @@ function EmptyState() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const { data: session } = useSession();
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -74,19 +95,18 @@ function EmptyState() {
     }
     const formData = new FormData();
     formData.append("resume", uploadedFile);
+    formData.append("email", session?.user?.email || "unknown");
 
     fetch("/api/extract", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
-      .then((data) => {
-        
-      })
+      .then((data) => {})
       .catch((error) => {
         console.error("Error extracting resume:", error);
       });
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto">

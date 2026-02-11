@@ -18,24 +18,17 @@ export default function ResumeList({ resumes }) {
 
       {/* Resume List */}
       <div className="grid gap-4">
-        <ResumeCard
-          title="Software Engineer Resume"
-          lastUpdated="2 days ago"
-          fileSize="245 KB"
-          isActive={true}
-        />
-        <ResumeCard
-          title="Frontend Developer Resume"
-          lastUpdated="1 week ago"
-          fileSize="198 KB"
-          isActive={false}
-        />
-        <ResumeCard
-          title="Full Stack Developer Resume"
-          lastUpdated="2 weeks ago"
-          fileSize="312 KB"
-          isActive={false}
-        />
+        {resumes.map((resume, index) => (
+          <ResumeCard
+            key={resume.id || index}
+            title={resume.filename}
+            lastUpdated={resume.uploadDate}
+            fileSize={resume.size}
+            isActive={index === 0}
+            resumeId={resume.id}
+            metadata={resume.metadata}
+          />
+        ))}
       </div>
     </div>
   );

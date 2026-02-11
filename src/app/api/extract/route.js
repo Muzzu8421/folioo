@@ -2,9 +2,19 @@ import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import mammoth from "mammoth";
 import { PDFParse } from "pdf-parse";
+import connectDb from "../../../../db/connectdb";
+import { GridFSBucket } from "mongodb";
+import Portfolio from "@/models/Portfolio";
 
 export async function POST(request) {
+  await connectDb();
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+
+  // Connect to MongoDB and set up GridFS bucket
+  const mongoose = await connectDb();
+  const bucket = new GridFSBucket(mongoose.connection.db, {
+    bucketName: "resumes",
+  });
 
   const formData = await request.formData();
   const resume = formData.get("resume");
@@ -16,6 +26,31 @@ export async function POST(request) {
   }
 
   const buffer = Buffer.from(await resume.arrayBuffer());
+
+  //upload to GridFS with metadata using promise
+  await new Promise((resolve, reject) => {
+    const uploadStream = bucket.openUploadStream(resume.name, {
+      contentType: resume.type,
+      metadata: {
+        id: new mongoose.Types.ObjectId().toString(),
+        email: formData.get("email") || "unknown",
+        originalName: resume.name,
+        uploadDate: new Date(),
+      },
+    });
+
+    uploadStream.on("error", (err) => {
+      reject(err);
+    });
+
+    uploadStream.on("finish", () => {
+      resolve();
+    });
+
+    uploadStream.write(buffer);
+    uploadStream.end();
+  });
+
   let resumeContent = "";
 
   if (resume.type === "application/pdf") {
@@ -136,17 +171,22 @@ Resume content: ${resumeContent}`;
     contents: prompt,
   });
 
-  const text = await response.text;
+  const text = response.text;
   let parsedData;
 
   try {
+    // Attempt to parse the AI response as JSON
     parsedData = JSON.parse(text);
+
+    // Save the parsed data to MongoDB using the Portfolio model
+    const email = formData.get("email") || "unknown";
+    await Portfolio.create({ email: email, details: parsedData });
   } catch (e) {
     return NextResponse.json(
       { error: "Failed to parse AI response as JSON" },
       { status: 500 },
     );
   }
-
+  console.log("Parsed Data:", parsedData);
   return NextResponse.json({ data: parsedData });
 }
