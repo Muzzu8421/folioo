@@ -1,7 +1,9 @@
 "use client";
 import { FileText, Download, Trash2, Eye, Star } from "lucide-react";
+import { Bounce, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function ResumeList({ resumes }) {
+export default function ResumeList({ resumes, setResumes }) {
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -27,6 +29,7 @@ export default function ResumeList({ resumes }) {
             isActive={index === 0}
             resumeId={resume.id}
             metadata={resume.metadata}
+            onDelete={(id)=>setResumes((prev)=>prev.filter((resume) => resume.id !== id))}
           />
         ))}
       </div>
@@ -34,7 +37,36 @@ export default function ResumeList({ resumes }) {
   );
 }
 
-function ResumeCard({ title, lastUpdated, fileSize, isActive }) {
+function ResumeCard({
+  title,
+  lastUpdated,
+  fileSize,
+  isActive,
+  resumeId,
+  onDelete
+}) {
+  // Handle resume deletion
+  const handleDelete = async (resumeId) => {
+    const res = await fetch(`/api/delete-resume?resumeId=${resumeId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (res.ok) {
+      toast.success(data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      onDelete(resumeId);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl p-6 border border-gray-200 hover:border-[#4f46e5] transition-all">
       <div className="flex items-center justify-between">
@@ -65,7 +97,10 @@ function ResumeCard({ title, lastUpdated, fileSize, isActive }) {
           <button className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
             <Download className="w-5 h-5" />
           </button>
-          <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+          <button
+            onClick={() => handleDelete(resumeId)}
+            className="cursor-pointerp-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
             <Trash2 className="w-5 h-5" />
           </button>
         </div>

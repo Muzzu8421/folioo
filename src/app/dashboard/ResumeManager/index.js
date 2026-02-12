@@ -12,12 +12,16 @@ export default function ResumeManager() {
     fetch("/api/get-resumes", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email: session.user.email }),
     })
       .then((response) => response.json())
       .then((data) => {
+        // Check if the resumes array is empty
+        if (data.resumes.length === 0 || !data.resumes) {
+          return;
+        }
         console.log(data.resumes);
         setResumes(data.resumes);
       })
@@ -28,7 +32,7 @@ export default function ResumeManager() {
 
   return (
     <div className="space-y-6">
-      {resumes.length === 0 ? <EmptyState /> : <ResumeList resumes={resumes} />}
+      {resumes.length === 0 ? <EmptyState /> : <ResumeList resumes={resumes} setResumes={setResumes} />}
     </div>
   );
 }
