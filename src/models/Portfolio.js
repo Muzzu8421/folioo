@@ -8,8 +8,16 @@ const portfolioSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    username: {
+      type: String,
+    },
+    selectedTemplate: { type: String, default: "modern" },
     details: {
       type: Object,
+    },
+    reviewed: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true },

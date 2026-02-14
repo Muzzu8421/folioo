@@ -5,18 +5,58 @@
   --indigo-600: #4f46e5;
   --purple-600: #7c3aed;
   --orange-400: #fb923c;
-  
+
   /* Typography */
-  --font-inter: 'Inter', sans-serif;
-  --font-poppins: 'Poppins', sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
 }
 
 @layer base {
   body {
     font-family: var(--font-inter);
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-poppins);
   }
+}
+
+/* Scrollbar */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2d1f6e transparent;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* track (background) */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* handle */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #4f46e5, #7c3aed, #fb923c);
+  border-radius: 999px;
+}
+
+/* handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #6366f1, #9333ea, #f97316);
+}
+
+/* corner where horizontal + vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+  background: transparent;
 }

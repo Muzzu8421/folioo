@@ -180,13 +180,17 @@ Resume content: ${resumeContent}`;
 
     // Save the parsed data to MongoDB using the Portfolio model
     const email = formData.get("email") || "unknown";
-    await Portfolio.create({ email: email, details: parsedData });
+    const username = formData.get("username") || "unknown";
+    const portfolio = await Portfolio.create({
+      email: email,
+      username: username,
+      details: parsedData,
+    });
+    return NextResponse.json({ id: portfolio._id.toString() }, { status: 200 });
   } catch (e) {
     return NextResponse.json(
       { error: "Failed to parse AI response as JSON" },
       { status: 500 },
     );
   }
-  console.log("Parsed Data:", parsedData);
-  return NextResponse.json({ data: parsedData });
 }

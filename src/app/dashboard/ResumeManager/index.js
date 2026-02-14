@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import ResumeList from "./ResumeList";
 import { Upload, FileText, Sparkles } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function ResumeManager() {
   const { data: session } = useSession();
@@ -22,7 +23,6 @@ export default function ResumeManager() {
         if (data.resumes.length === 0 || !data.resumes) {
           return;
         }
-        console.log(data.resumes);
         setResumes(data.resumes);
       })
       .catch((error) => {
@@ -42,6 +42,7 @@ function EmptyState() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -100,13 +101,21 @@ function EmptyState() {
     const formData = new FormData();
     formData.append("resume", uploadedFile);
     formData.append("email", session?.user?.email || "unknown");
+    formData.append("username", session?.user?.name || "unknown");
 
     fetch("/api/extract", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
-      .then((data) => {})
+      .then((data) => {
+        if (data.success === false) {
+          alert(data.error || "Failed to extract resume");
+          return;
+        }
+        setUploadedFile(null);
+        router.push("/dashboard/review?portfolioId=" + data.id);
+      })
       .catch((error) => {
         console.error("Error extracting resume:", error);
       });
