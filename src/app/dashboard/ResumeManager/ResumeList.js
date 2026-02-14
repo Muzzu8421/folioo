@@ -78,7 +78,7 @@ function ResumeCard({
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-gray-900">{title}</h3>
               {isActive && (
-                <span className="inline-flex items-center px-3 py-1 bg-[#10b981] bg-opacity-10 text-[#10b981] rounded-full text-sm font-semibold">
+                <span className="inline-flex items-center px-3 py-1 bg-[#10b981] bg-opacity-10 text-white rounded-full text-sm font-semibold">
                   <Star className="w-3 h-3 mr-1 fill-current" />
                   Active
                 </span>
