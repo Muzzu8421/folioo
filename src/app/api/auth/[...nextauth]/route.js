@@ -44,16 +44,24 @@ const authoptions = {
               },
             ],
           });
-          const token = currentUser.getVerificationToken();
-          await currentUser.save();
-          // Here you would send the verification email to the user with the token
-          const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
-          // Example of sending verification email using SendEmail utility function
-          await SendEmail(
-            currentUser.email,
-            "Verify your email",
-            EmailTemplate(verificationUrl, currentUser.fullname),
-          );
+          
+          // check if email is verified
+          if (currentUser.emailVerified) {
+            return true;
+          } else {
+            const token = currentUser.getVerificationToken();
+            await currentUser.save();
+
+            // Here you would send the verification email to the user with the token
+            const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
+
+            // Example of sending verification email using SendEmail utility function
+            await SendEmail(
+              currentUser.email,
+              "Verify your email",
+              EmailTemplate(verificationUrl, currentUser.fullname),
+            );
+          }
         }
         return true;
       }
@@ -84,18 +92,24 @@ const authoptions = {
             await currentUser.save();
           }
         }
-        const token = currentUser.getVerificationToken();
-        await currentUser.save();
 
-        // Here you would send the verification email to the user with the token
-        const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
+        // check if email is verified
+        if (currentUser.emailVerified) {
+          return true;
+        } else {
+          const token = currentUser.getVerificationToken();
+          await currentUser.save();
 
-        // Example of sending verification email using SendEmail utility function
-        await SendEmail(
-          currentUser.email,
-          "Verify your email",
-          EmailTemplate(verificationUrl, currentUser.fullname),
-        );
+          // Here you would send the verification email to the user with the token
+          const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}&id=${currentUser._id}`;
+
+          // Example of sending verification email using SendEmail utility function
+          await SendEmail(
+            currentUser.email,
+            "Verify your email",
+            EmailTemplate(verificationUrl, currentUser.fullname),
+          );
+        }
       }
       return true;
     },

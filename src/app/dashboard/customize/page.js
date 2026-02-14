@@ -19,22 +19,22 @@ const TEMPLATES = [
     id: "modern",
     name: "Modern Dark",
     description:
-      "Sticky sidebar, dark theme, scroll-tracked navigation. Loved by developers and designers.",
+      "Clean white layout, generous spacing, elegant typography. Timeless and professional.",
     tags: ["Dark", "Sidebar", "Minimal"],
   },
   {
-    id: "minimal",
-    name: "Minimal Light",
+    id: "editorial",
+    name: "Editorial",
     description:
-      "Clean white layout, generous spacing, elegant typography. Timeless and professional.",
-    tags: ["Light", "Clean", "Classic"],
+      "Magazine-inspired layout with serif typography, warm cream tones, and bold section numbers. Stands out from every dark-theme portfolio.",
+    tags: ["Light", "Serif", "Magazine"],
   },
   {
-    id: "creative",
-    name: "Creative Bold",
+    id: "terminal",
+    name: "Terminal",
     description:
-      "Asymmetric layout, big type, colorful accents. For creatives who want to stand out.",
-    tags: ["Colorful", "Bold", "Unique"],
+      "Your portfolio as a VS Code editor. Syntax-highlighted files, openable tabs, typewriter effect. The most memorable template for tech roles.",
+    tags: ["Dark", "IDE", "Interactive"],
   },
 ];
 
@@ -163,10 +163,10 @@ export default function CustomizePage() {
             {/* Mockup */}
             <div className="h-44 relative bg-gray-900 flex items-center justify-center">
               <Image
-                src="/Modern.png"
+                src={"/" + template.id + ".png"}
                 alt={template.name}
                 fill
-                className="object-cover"
+                className="object-fill"
               />
             </div>
 
