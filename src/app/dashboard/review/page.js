@@ -9,7 +9,7 @@ export default function ReviewPage() {
 
   const portfolioId = searchParams.get("portfolioId");
   const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!portfolioId) return;

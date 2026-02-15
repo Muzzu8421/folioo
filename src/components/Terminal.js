@@ -14,11 +14,11 @@ export default function Terminal({ details }) {
 
   const files = [
     { name: "about.md",           label: "about.md" },
-    { name: "experience.json",    label: "experience.json",    show: experience?.length > 0 },
-    { name: "skills.ts",          label: "skills.ts",          show: !!skills },
-    { name: "projects.js",        label: "projects.js",        show: projects?.length > 0 },
-    { name: "education.md",       label: "education.md",       show: education?.length > 0 },
-    { name: "certifications.yml", label: "certifications.yml", show: certifications?.length > 0 || awards?.length > 0 },
+    { name: "experience.json",    label: "experience.json",   show: experience?.length > 0 },
+    { name: "skills.ts",          label: "skills.ts",         show: !!skills },
+    { name: "projects.js",        label: "projects.js",       show: projects?.length > 0 },
+    { name: "education.md",       label: "education.md",      show: education?.length > 0 },
+    { name: "certifications.yml", label: "certifications.yml",show: certifications?.length > 0 || awards?.length > 0 },
   ].filter(f => f.show !== false);
 
   const [openTabs, setOpenTabs] = useState(["about.md"]);
@@ -63,19 +63,13 @@ export default function Terminal({ details }) {
     </div>
   );
 
-  const kw   = (t) => <span className="c-kw">{t}</span>;
-  const str  = (t) => <span className="c-str">{`"${t}"`}</span>;
-  const num  = (t) => <span className="c-num">{t}</span>;
-  const cmt  = (t) => <span className="c-cmt">{t}</span>;
-  const fn   = (t) => <span className="c-fn">{t}</span>;
-  const prop = (t) => <span className="c-prop">{t}</span>;
-  const pun  = (t) => <span className="c-pun">{t}</span>;
-
-  const fileIconColor = (name) =>
-    name.endsWith(".json") ? "#e5c07b" :
-    name.endsWith(".ts")   ? "#3178c6" :
-    name.endsWith(".js")   ? "#e5c07b" :
-    name.endsWith(".yml")  ? "#e06c75" : "#519aba";
+  const kw  = (t) => <span className="c-kw">{t}</span>;
+  const str = (t) => <span className="c-str">{`"${t}"`}</span>;
+  const num = (t) => <span className="c-num">{t}</span>;
+  const cmt = (t) => <span className="c-cmt">{t}</span>;
+  const fn  = (t) => <span className="c-fn">{t}</span>;
+  const prop= (t) => <span className="c-prop">{t}</span>;
+  const pun = (t) => <span className="c-pun">{t}</span>;
 
   return (
     <>
@@ -373,12 +367,8 @@ export default function Terminal({ details }) {
         }
         .status-link:hover { color: #fff; }
 
-        /* ─────────────────────────────────────────
-           MOBILE ONLY — nothing above this line
-           changes for desktop
-        ───────────────────────────────────────── */
+        /* ── MOBILE ONLY — nothing above changes ── */
 
-        /* chip bar hidden on desktop */
         .mob-chips { display: none; }
 
         .mob-chip {
@@ -402,24 +392,24 @@ export default function Terminal({ details }) {
           border-color: var(--accent);
           color: #fff;
         }
-        /* icon turns white inside active chip */
-        .mob-chip.active svg { color: #fff !important; }
+        .mob-chip.active .ic-md,
+        .mob-chip.active .ic-json,
+        .mob-chip.active .ic-ts,
+        .mob-chip.active .ic-js,
+        .mob-chip.active .ic-yml { color: #fff; }
 
-        /* tablet: slim sidebar, hide activity bar */
         @media (max-width: 768px) {
-          .activity-bar  { display: none; }
-          .explorer      { width: 160px; }
+          .activity-bar { display: none; }
+          .explorer { width: 160px; }
           .titlebar-text { font-size: 0.6rem; }
         }
 
-        /* mobile: full layout swap */
         @media (max-width: 540px) {
           .activity-bar { display: none; }
           .explorer     { display: none; }
           .tabs         { display: none; }
           .breadcrumb   { display: none; }
 
-          /* show chip nav */
           .mob-chips {
             display: flex;
             overflow-x: auto;
@@ -434,16 +424,13 @@ export default function Terminal({ details }) {
 
           body { font-size: 12px; }
           .code-content { padding: 10px 12px; }
-          .line-nums    { min-width: 30px; padding-right: 8px; font-size: 11px; }
-
-          /* hide text labels in status bar, keep icons */
+          .line-nums { min-width: 30px; padding-right: 8px; font-size: 11px; }
           .status-label { display: none; }
-          .statusbar    { gap: 10px; }
         }
 
         @media (max-width: 380px) {
           .code-content { padding: 8px 10px; font-size: 11px; }
-          .line-nums    { min-width: 24px; padding-right: 5px; font-size: 10px; }
+          .line-nums { min-width: 24px; padding-right: 5px; font-size: 10px; }
         }
       `}</style>
 
@@ -464,23 +451,31 @@ export default function Terminal({ details }) {
           {/* Activity bar */}
           <div className="activity-bar">
             <div className="act-icon active"><FolderOpen size={20} /></div>
+            <div className="act-icon"><FileCode size={20} /></div>
           </div>
 
           {/* File explorer */}
           <div className="explorer">
             <div className="explorer-title">Explorer</div>
+
             <div className="folder-row" onClick={() => toggleFolder("portfolio")}>
               {openFolders.portfolio ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
               <FolderOpen size={14} style={{ color: "#e5c07b" }} />
               portfolio
             </div>
+
             {openFolders.portfolio && files.map(f => (
               <div
                 key={f.name}
                 className={`file-row ${activeFile === f.name ? "active" : ""}`}
                 onClick={() => openFile(f.name)}
               >
-                <FileCode size={14} color={fileIconColor(f.name)} strokeWidth={2.1} />
+                <FileCode size={13} className={
+                  f.name.endsWith(".json") ? "ic-json" :
+                  f.name.endsWith(".ts")   ? "ic-ts" :
+                  f.name.endsWith(".js")   ? "ic-js" :
+                  f.name.endsWith(".yml")  ? "ic-yml" : "ic-md"
+                } />
                 {f.label}
               </div>
             ))}
@@ -489,7 +484,7 @@ export default function Terminal({ details }) {
           {/* Editor */}
           <div className="editor-area">
 
-            {/* Desktop tabs */}
+            {/* Tabs */}
             <div className="tabs">
               {openTabs.map(tab => (
                 <div
@@ -497,14 +492,14 @@ export default function Terminal({ details }) {
                   className={`tab ${activeFile === tab ? "active" : ""}`}
                   onClick={() => openFile(tab)}
                 >
-                  <FileCode size={13} color={fileIconColor(tab)} strokeWidth={2.1} />
+                  <FileCode size={12} />
                   {tab}
                   <button className="tab-close" onClick={(e) => closeTab(tab, e)}>×</button>
                 </div>
               ))}
             </div>
 
-            {/* Mobile chip nav — replaces sidebar + tabs */}
+            {/* Mobile chip nav — only visible under 540px */}
             <div className="mob-chips">
               {files.map(f => (
                 <button
@@ -512,7 +507,12 @@ export default function Terminal({ details }) {
                   className={`mob-chip ${activeFile === f.name ? "active" : ""}`}
                   onClick={() => openFile(f.name)}
                 >
-                  <FileCode size={12} color={fileIconColor(f.name)} strokeWidth={2.1} />
+                  <FileCode size={11} className={
+                    f.name.endsWith(".json") ? "ic-json" :
+                    f.name.endsWith(".ts")   ? "ic-ts" :
+                    f.name.endsWith(".js")   ? "ic-js" :
+                    f.name.endsWith(".yml")  ? "ic-yml" : "ic-md"
+                  } />
                   {f.label}
                 </button>
               ))}
@@ -523,7 +523,7 @@ export default function Terminal({ details }) {
               portfolio &gt; {activeFile}
             </div>
 
-            {/* Code view */}
+            {/* Code content */}
             <div className="code-view">
 
               {/* about.md */}
@@ -566,12 +566,12 @@ export default function Terminal({ details }) {
                         <span className="code-line">{"    "}{prop("description")}{pun(": ")}{str((exp.description ?? "").slice(0,80) + "…")}</span>
                         {exp.technologies?.length > 0 && (
                           <>
-                            <span className="code-line">{"    "}{prop("stack")}{pun(": [")}</span>
-                            <span className="code-line">{"      "}{exp.technologies.map((t, j) => <span key={j}><span className="c-str">{`"${t}"`}</span>{j < exp.technologies.length - 1 ? ", " : ""}</span>)}</span>
+                            <span className="code-line">{"    "}{prop("stack")}{pun(": [")} </span>
+                            <span className="code-line">{"      "}{exp.technologies.map((t,j) => <span key={j}><span className="c-str">{`"${t}"`}</span>{j < exp.technologies.length-1 ? ", " : ""}</span>)}</span>
                             <span className="code-line">{"    "}{pun("]")}</span>
                           </>
                         )}
-                        <span className="code-line">{"  "}{pun("}")}{i < experience.length - 1 ? pun(",") : ""}</span>
+                        <span className="code-line">{"  "}{pun("}")}{ i < experience.length - 1 ? pun(",") : ""}</span>
                       </span>
                     ))}
                     <span className="code-line">{pun("]")}</span>
@@ -589,13 +589,13 @@ export default function Terminal({ details }) {
                     <span className="code-line">{"  "}{prop("soft")}{pun(": string[];")}</span>
                     <span className="code-line">{pun("}")}</span>
                     <span className="code-line"> </span>
-                    <span className="code-line">{kw("const")} {fn("skills")}{pun(": Skills = {")}</span>
+                    <span className="code-line">{kw("const")} {fn("skills")}{pun(": Skills = {")} </span>
                     <span className="code-line">{"  "}{prop("technical")}{pun(": {")}</span>
                     {skills?.technical?.map((cat, i) => (
                       <span key={i} className="code-block">
                         <span className="code-line">{"    "}{str(cat.category)}{pun(": [")}
                           {cat.items?.map((item, j) => (
-                            <span key={j}><span className="c-str">{`"${item}"`}</span>{j < cat.items.length - 1 ? ", " : ""}</span>
+                            <span key={j}><span className="c-str">{`"${item}"`}</span>{j < cat.items.length-1 ? ", " : ""}</span>
                           ))}
                         {pun("],")}
                         </span>
@@ -604,8 +604,8 @@ export default function Terminal({ details }) {
                     <span className="code-line">{"  "}{pun("},")} </span>
                     {skills?.soft?.length > 0 && (
                       <>
-                        <span className="code-line">{"  "}{prop("soft")}{pun(": [")}</span>
-                        <span className="code-line">{"    "}{skills.soft.map((s, i) => <span key={i}><span className="c-str">{`"${s}"`}</span>{i < skills.soft.length - 1 ? ", " : ""}</span>)}</span>
+                        <span className="code-line">{"  "}{prop("soft")}{pun(": [")} </span>
+                        <span className="code-line">{"    "}{skills.soft.map((s,i) => <span key={i}><span className="c-str">{`"${s}"`}</span>{i < skills.soft.length-1 ? ", " : ""}</span>)}</span>
                         <span className="code-line">{"  "}{pun("]")}</span>
                       </>
                     )}
@@ -622,15 +622,14 @@ export default function Terminal({ details }) {
                     {projects?.map((proj, i) => (
                       <span key={i} className="code-block">
                         <span className="code-line">{cmt(`// ${proj.name}`)}</span>
-                        <span className="code-line">{kw("const")} {fn(`project_${i + 1}`)} {pun("= {")}</span>
+                        <span className="code-line">{kw("const")} {fn(`project_${i+1}`)} {pun("= {")} </span>
                         <span className="code-line">{"  "}{prop("name")}{pun(": ")}{str(proj.name ?? "")}{pun(",")}</span>
                         <span className="code-line">{"  "}{prop("description")}{pun(": ")}{str((proj.description ?? "").slice(0,90) + "…")}{pun(",")}</span>
                         {proj.url && <span className="code-line">{"  "}{prop("url")}{pun(": ")}{str(proj.url)}{pun(",")}</span>}
                         {proj.technologies?.length > 0 && (
                           <span className="code-line">{"  "}{prop("stack")}{pun(": [")}
-                            {proj.technologies.map((t, j) => <span key={j}><span className="c-str">{`"${t}"`}</span>{j < proj.technologies.length - 1 ? ", " : ""}</span>)}
-                          {pun("]")}
-                          </span>
+                            {proj.technologies.map((t,j) => <span key={j}><span className="c-str">{`"${t}"`}</span>{j < proj.technologies.length-1 ? ", " : ""}</span>)}
+                          {pun("];")}</span>
                         )}
                         <span className="code-line">{pun("}")}</span>
                         <span className="code-line"> </span>
@@ -706,22 +705,12 @@ export default function Terminal({ details }) {
           <span className="status-item">⎇ main</span>
           <span className="status-item">✓ 0 errors</span>
           <span className="status-item" style={{ marginLeft: "auto" }}>
-            {personalInfo?.email && (
-              <a href={`mailto:${personalInfo.email}`} className="status-link">
-                <Mail size={11} />
-                <span className="status-label"> {personalInfo.email}</span>
-              </a>
-            )}
+            {personalInfo?.email && <a href={`mailto:${personalInfo.email}`} className="status-link"><Mail size={11} /><span className="status-label"> {personalInfo.email}</span></a>}
           </span>
           {personalInfo?.linkedin  && <a href={personalInfo.linkedin}  className="status-link" target="_blank" rel="noreferrer"><Linkedin size={11} /></a>}
           {personalInfo?.github    && <a href={personalInfo.github}    className="status-link" target="_blank" rel="noreferrer"><Github size={11} /></a>}
           {personalInfo?.portfolio && <a href={personalInfo.portfolio} className="status-link" target="_blank" rel="noreferrer"><Globe size={11} /></a>}
-          {personalInfo?.location  && (
-            <span className="status-item">
-              <MapPin size={11} />
-              <span className="status-label"> {personalInfo.location}</span>
-            </span>
-          )}
+          {personalInfo?.location  && <span className="status-item"><MapPin size={11} /><span className="status-label"> {personalInfo.location}</span></span>}
         </div>
 
       </div>

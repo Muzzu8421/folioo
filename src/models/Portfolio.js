@@ -12,6 +12,10 @@ const portfolioSchema = new mongoose.Schema(
       type: String,
     },
     selectedTemplate: { type: String, default: "modern" },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
     details: {
       type: Object,
     },

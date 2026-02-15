@@ -9,7 +9,13 @@ export async function PATCH(request) {
   const updatedDetails = { ...details };
 
   try {
-    const portfolio = await Portfolio.findOneAndUpdate(
+    //find all portfolios and if only one found set active to true
+    const portfolios = await Portfolio.find({ username: username });
+
+    const currentPortfolio = portfolios.find((p) => p._id.toString() === id);
+    const isActive = portfolios.length === 1 ? true : currentPortfolio.isActive;
+
+    await Portfolio.findOneAndUpdate(
       { _id: id },
       {
         $set: {
@@ -17,6 +23,7 @@ export async function PATCH(request) {
           selectedTemplate: selectedTemplate,
           details: updatedDetails,
           reviewed: true,
+          isActive: isActive,
         },
       },
       { new: true },

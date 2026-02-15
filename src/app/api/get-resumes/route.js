@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../db/connectdb";
 import { GridFSBucket } from "mongodb";
+import Portfolio from "@/models/Portfolio";
 
 export async function POST(request) {
   try {
@@ -15,13 +16,14 @@ export async function POST(request) {
 
     // Find all resumes for the user
     const files = await bucket.find({ "metadata.email": email }).toArray();
+    const portfolio = await Portfolio.findOne({ email: email });
+
+    const portfolioid = portfolio?._id.toString();
+    const isActive = portfolio?.isActive;
 
     // Check if any resumes were found. if not, return an empty array
     if (files.length === 0) {
-      return NextResponse.json(
-        { resumes: [] },
-        { status: 200 },
-      );
+      return NextResponse.json({ resumes: [] }, { status: 200 });
     }
 
     // Format the resumes as needed
@@ -31,6 +33,8 @@ export async function POST(request) {
       uploadDate: file.uploadDate,
       size: file.length,
       metadata: file.metadata,
+      portfolioid: portfolioid,
+      isActive: isActive,
     }));
     return NextResponse.json({ resumes }, { status: 200 });
   } catch (error) {
