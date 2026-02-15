@@ -100,7 +100,7 @@ export default function ResumeList({ resumes, setResumes }) {
     }
   };
 
-  // ── Delete ───────────────────────────────────────────────────────────────
+  // Delete
 
   const handleDelete = async (resumeId) => {
     const res = await fetch(`/api/delete-resume?resumeId=${resumeId}`, {
@@ -129,19 +129,29 @@ export default function ResumeList({ resumes, setResumes }) {
     }
   };
 
-  // ── Download ─────────────────────────────────────────────────────────────
-
+  // Download
   const handleDownload = async (resumeId, filename) => {
     try {
       const res = await fetch(`/api/download-resume?resumeId=${resumeId}`);
-      if (!res.ok) throw new Error("Download failed");
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename ?? "resume";
-      a.click();
-      URL.revokeObjectURL(url);
+
+      if (!res.ok) throw new Error("Download failed.");
+
+      const data = await res.blob();
+      const url = window.URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Download started!", {
+        position: "top-right",
+        autoClose: 4000,
+        theme: "light",
+        transition: Bounce,
+      });
     } catch {
       toast.error("Could not download file.", {
         position: "top-right",
@@ -152,13 +162,11 @@ export default function ResumeList({ resumes, setResumes }) {
     }
   };
 
-  // ── View ─────────────────────────────────────────────────────────────────
-
+  //View
   const handleView = (portfolioId) => {
-    if (portfolioId) router.push(`/dashboard/review?id=${portfolioId}`);
+    if (portfolioId)
+      router.push(`/dashboard/review?portfolioId=${portfolioId}`);
   };
-
-  // ── Render ───────────────────────────────────────────────────────────────
 
   return (
     <>
@@ -240,7 +248,7 @@ export default function ResumeList({ resumes, setResumes }) {
                     <h3 className="font-semibold text-gray-900 truncate max-w-[180px] sm:max-w-xs md:max-w-sm">
                       {resume.filename}
                     </h3>
-                    {index === 0 && (
+                    {resume.isActive && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-500 text-white rounded-full text-xs font-semibold flex-shrink-0">
                         <Star className="w-3 h-3 fill-current" />
                         Active

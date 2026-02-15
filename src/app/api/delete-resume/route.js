@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDb from "../../../../db/connectdb";
 import { GridFSBucket } from "mongodb";
+import Portfolio from "@/models/Portfolio";
 
 export async function DELETE(request) {
   const mongoose = await connectDb();

@@ -8,7 +8,10 @@ export default async function PortfolioPage({ params }) {
   const { username } = await params;
 
   await connectDb();
-  const data = await Portfolio.findOne({ username }).lean();
+  const portfolios = await Portfolio.find({ username }).lean();
+
+  //check if the portfolio is active
+  const data = portfolios.find((p) => p.isActive === true);
 
   if (!data)
     return (
