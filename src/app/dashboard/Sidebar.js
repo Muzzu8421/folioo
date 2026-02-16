@@ -42,7 +42,6 @@ export default function Sidebar({ userData, activePage, setActivePage }) {
             <p className="font-semibold text-gray-900 truncate">{userData.fullname}</p>
             <p className="text-sm text-gray-500 truncate">{userData.email}</p>
           </div>
-          <ChevronDown className="w-4 h-4 text-gray-400" />
         </div>
       </div>
 

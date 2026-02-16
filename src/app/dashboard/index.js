@@ -10,6 +10,7 @@ import TopBar from "./TopBar";
 import DashboardContent from "./DashboardContent";
 import SettingsContent from "./Settings";
 import ResumeManager from "./ResumeManager";
+import TemplatesManager from "./TemplatesManager";
 
 export default function Dashboard({ onNavigate }) {
   const { data: session } = useSession();
@@ -59,17 +60,7 @@ export default function Dashboard({ onNavigate }) {
 
           {activePage === "resume" && <ResumeManager />}
 
-          {activePage === "templates" && (
-            <div className="text-center py-20">
-              <Palette className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Templates
-              </h2>
-              <p className="text-gray-600">
-                This section is under construction
-              </p>
-            </div>
-          )}
+          {activePage === "templates" && <TemplatesManager />}
         </main>
       </div>
 

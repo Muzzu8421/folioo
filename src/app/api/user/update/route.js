@@ -24,11 +24,11 @@ export async function POST(request) {
       { new: true, runValidators: true },
     );
 
-    //update the username in the portfolio model
-    await Portfolio.findOneAndUpdate(
+    //update the username in all portfolios
+    await Portfolio.updateMany(
       { email: body.email },
       { $set: { username: username } },
-    );
+    )
 
     if (!user) {
       return NextResponse.json(

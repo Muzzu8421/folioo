@@ -7,6 +7,7 @@ export async function DELETE(request) {
   const mongoose = await connectDb();
   const { searchParams } = new URL(request.url);
   const resumeId = searchParams.get("resumeId");
+  const portfolioId = searchParams.get("portfolioId");
 
   // Create a GridFS bucket
   const bucket = new GridFSBucket(mongoose.connection.db, {
@@ -16,6 +17,10 @@ export async function DELETE(request) {
   try {
     // Delete the resume from GridFS
     await bucket.delete(new mongoose.Types.ObjectId(resumeId));
+
+    //the portfolio is deleted when the last resume is deleted
+    await Portfolio.deleteOne({ _id: portfolioId });
+
     return NextResponse.json(
       { message: "Resume deleted successfully" },
       { status: 200 },

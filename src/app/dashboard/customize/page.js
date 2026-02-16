@@ -86,7 +86,7 @@ export default function CustomizePage() {
         autoClose: 2000,
         transition: Bounce,
       });
-      setTimeout(() => router.push(`/portfolio/${username}`), 1500);
+      router.push("/dashboard");
     } catch (err) {
       toast.error(err.message || "Failed to publish", {
         position: "top-right",

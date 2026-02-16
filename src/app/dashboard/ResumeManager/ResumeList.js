@@ -20,8 +20,7 @@ export default function ResumeList({ resumes, setResumes }) {
   const fileRef = useRef(null);
   const [uploading, setUploading] = useState(false);
 
-  // ── Format helpers ───────────────────────────────────────────────────────
-
+  // Format
   const formatDate = (iso) => {
     if (!iso) return "Unknown date";
     try {
@@ -42,8 +41,7 @@ export default function ResumeList({ resumes, setResumes }) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // ── Upload ───────────────────────────────────────────────────────────────
-
+  // Upload
   const handleUploadClick = () => fileRef.current?.click();
 
   const handleFileChange = async (e) => {
@@ -101,11 +99,17 @@ export default function ResumeList({ resumes, setResumes }) {
   };
 
   // Delete
+  const handleDelete = async (resumeId, portfolioId) => {
+    // First ask user for confirmation
+    const confirmed = confirm("Are you sure you want to delete this resume?");
+    if (!confirmed) return;
 
-  const handleDelete = async (resumeId) => {
-    const res = await fetch(`/api/delete-resume?resumeId=${resumeId}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(
+      `/api/delete-resume?resumeId=${resumeId}&portfolioId=${portfolioId}`,
+      {
+        method: "DELETE",
+      },
+    );
     const data = await res.json();
     if (res.ok) {
       toast.success(data.message, {
@@ -264,7 +268,7 @@ export default function ResumeList({ resumes, setResumes }) {
                 {/* Actions — always visible, no overflow */}
                 <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
                   <button
-                    onClick={() => handleView(resume.portfolioId ?? resume.id)}
+                    onClick={() => handleView(resume.portfolioid ?? resume.id)}
                     title="View / Edit"
                     className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                   >
@@ -278,7 +282,7 @@ export default function ResumeList({ resumes, setResumes }) {
                     <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                   <button
-                    onClick={() => handleDelete(resume.id)}
+                    onClick={() => handleDelete(resume.id, resume.portfolioid)}
                     title="Delete"
                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                   >
