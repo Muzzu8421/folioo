@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
+import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import connectDb from "../../../../db/connectdb";
 import { GridFSBucket } from "mongodb";
 import Portfolio from "@/models/Portfolio";
@@ -54,7 +54,7 @@ export async function POST(request) {
   let resumeContent = "";
 
   if (resume.type === "application/pdf") {
-    const data = await PDFParse(buffer);
+    const data = await pdfParse(buffer);
     resumeContent = data.text;
   } else if (
     resume.type ===
