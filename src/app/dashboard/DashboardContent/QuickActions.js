@@ -1,5 +1,5 @@
 import { Upload, Palette, Globe, ExternalLink } from "lucide-react";
-import QuickActionCard from "../shared/QuickActionCard";
+import QuickActionCard from "../Shared/QuickActionCard";
 
 export default function QuickActions() {
   return (

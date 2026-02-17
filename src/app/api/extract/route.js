@@ -5,6 +5,7 @@ import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import connectDb from "../../../../db/connectdb";
 import { GridFSBucket } from "mongodb";
 import Portfolio from "@/models/Portfolio";
+import Analytics from "@/models/Analytics";
 
 export async function POST(request) {
   await connectDb();
@@ -185,6 +186,14 @@ Resume content: ${resumeContent}`;
       email: email,
       username: username,
       details: parsedData,
+    });
+
+    //Create the Analytics entry for the portfolio
+    await Analytics.create({
+      portfolioId: portfolio._id,
+      username: username,
+      email: email,
+      isActive: true,
     });
     return NextResponse.json({ id: portfolio._id.toString() }, { status: 200 });
   } catch (e) {
