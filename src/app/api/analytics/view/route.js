@@ -16,7 +16,7 @@ export async function POST(request) {
 
   // add the view to the analytics collection
   const analytics = await Analytics.findOneAndUpdate(
-    { _id: new mongoose.Types.ObjectId(portfolioId) },
+    { portfolioId: new mongoose.Types.ObjectId(portfolioId) },
     {
       $inc: { views: 1 },
       $push: { viewhistory: new Date() },

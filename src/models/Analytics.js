@@ -5,15 +5,14 @@ const portfolioSchema = new mongoose.Schema(
     id: {
       type: String,
     },
+    portfolioId: {
+      type: String,
+    },
     email: {
       type: String,
     },
     username: {
       type: String,
-    },
-    isActive: {
-      type: Boolean,
-      default: false,
     },
     views: { type: Number, default: 0 },
     clicks: { type: Number, default: 0 },

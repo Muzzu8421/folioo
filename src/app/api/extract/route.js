@@ -190,10 +190,10 @@ Resume content: ${resumeContent}`;
 
     //Create the Analytics entry for the portfolio
     await Analytics.create({
+      _id: new mongoose.Types.ObjectId(),
       portfolioId: portfolio._id,
       username: username,
       email: email,
-      isActive: true,
     });
     return NextResponse.json({ id: portfolio._id.toString() }, { status: 200 });
   } catch (e) {

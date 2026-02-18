@@ -5,6 +5,7 @@ import SuggestionsCard from "./SuggestionsCard";
 import AnalyticsChart from "./AnalyticsChart";
 
 export default function DashboardContent({ userName }) {
+  
   return (
     <>
       <StatsOverview />
