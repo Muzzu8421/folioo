@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowRight, Loader2, Plus, Trash2 } from "lucide-react";
 
-export default function ReviewPage() {
+function ReviewContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -401,3 +401,15 @@ export default function ReviewPage() {
     </div>
   );
 }
+
+export default function ReviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[#4f46e5]" />
+      </div>
+    }>
+      <ReviewContent />
+    </Suspense>
+  );
+}

@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const VerifyEmail = () => {
+const VerifyEmailContent = () => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(false);
   const [verified, setverified] = useState(false);
@@ -94,6 +94,14 @@ const VerifyEmail = () => {
         </div>
       )}
     </div>
+  );
+};
+
+const VerifyEmail = () => {
+  return (
+    <Suspense fallback={<Loader />}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 };
 

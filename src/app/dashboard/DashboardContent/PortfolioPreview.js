@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Copy } from "lucide-react";
 import Link from "next/link";
 import { toast, Bounce } from "react-toastify";
@@ -5,7 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function PortfolioPreview({ userName }) {
-  const link = window.location.origin + "/portfolio/" + userName;
+  const [link, setLink] = useState("");
+
+  useEffect(() => {
+    setLink(window.location.origin + "/portfolio/" + userName);
+  }, [userName]);
 
   // Copy portfolio link to clipboard
   const handleCopy = () => {
