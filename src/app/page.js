@@ -106,10 +106,12 @@ function Hero({ dest }) {
         <div className="relative anim-in d3">
           <SpotlightCard className="rounded-3xl border border-white/5 bg-[#111] p-2">
             <div className="rounded-2xl overflow-hidden relative aspect-[4/3] bg-[#050505]">
-              {/* RESTORED PREVIOUS IMAGE (modern.png) */}
-              <img 
-                src="/modern.png" 
-                alt="Portfolio Preview" 
+              <video 
+                src="/folioo.mp4" 
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="object-cover object-top w-full h-full group-hover:scale-105 transition-transform duration-1000" 
               />
             </div>
