@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -40,7 +40,7 @@ const TEMPLATES = [
 
 // Main Page
 
-export default function CustomizePage() {
+function CustomizeContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -221,5 +221,17 @@ export default function CustomizePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function CustomizePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+      </div>
+    }>
+      <CustomizeContent />
+    </Suspense>
   );
 }
