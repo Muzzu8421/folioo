@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Navbar({ onNavigate }) {
+  const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -33,17 +35,35 @@ export default function Navbar({ onNavigate }) {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-4">
-            <Link href="/login">
-              <button className="text-[14px] text-white/40 hover:text-white transition-colors">Log in</button>
-            </Link>
-            <Link href="/login">
-              <button className="group px-6 py-2.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[14px] hover:bg-[#d8b4fe] transition-all duration-300 flex items-center gap-1">
-                Start Free
-                <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </button>
-            </Link>
-          </div>
+          {session ? (
+            <div className="hidden lg:flex items-center gap-4">
+              <Link href="/dashboard">
+                <button className="group px-6 py-2.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[14px] hover:bg-[#d8b4fe] transition-all duration-300 flex items-center gap-1 cursor-pointer">
+                  Dashboard
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
+              </Link>
+              {session.user?.image ? (
+                <img src={session.user.image} alt="Profile" className="w-10 h-10 rounded-full border border-white/10" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-[#c084fc] font-medium">
+                  {session.user?.name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center gap-4">
+              <Link href="/login">
+                <button className="text-[14px] text-white/40 hover:text-white transition-colors cursor-pointer">Log in</button>
+              </Link>
+              <Link href="/login">
+                <button className="group px-6 py-2.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[14px] hover:bg-[#d8b4fe] transition-all duration-300 flex items-center gap-1 cursor-pointer">
+                  Start Free
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
+              </Link>
+            </div>
+          )}
 
           <button onClick={() => setOpen(!open)} className="lg:hidden p-2 text-white/60 hover:text-white">
             {open ? <X size={22} /> : <Menu size={22} />}
@@ -60,14 +80,29 @@ export default function Navbar({ onNavigate }) {
               {l}
             </a>
           ))}
-          <div className="pt-4 space-y-2 border-t border-white/5 mt-4">
-            <Link href="/login" className="block">
-              <button className="w-full py-3 text-white border border-white/10 rounded-xl text-[14px] font-medium">Log in</button>
-            </Link>
-            <Link href="/login" className="block">
-              <button className="w-full py-3 bg-[#c084fc] text-[#0a0a0a] rounded-xl text-[14px] font-semibold">Start Free</button>
-            </Link>
-          </div>
+          {session ? (
+            <div className="pt-4 space-y-4 border-t border-white/5 mt-4 flex items-center gap-4">
+              {session.user?.image ? (
+                <img src={session.user.image} alt="Profile" className="w-12 h-12 rounded-full border border-white/10" />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-[#c084fc] font-medium text-lg">
+                  {session.user?.name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
+              <Link href="/dashboard" className="flex-1">
+                <button className="w-full py-3 bg-[#c084fc] text-[#0a0a0a] rounded-xl text-[14px] font-semibold cursor-pointer">Dashboard</button>
+              </Link>
+            </div>
+          ) : (
+            <div className="pt-4 space-y-2 border-t border-white/5 mt-4">
+              <Link href="/login" className="block">
+                <button className="w-full py-3 text-white border border-white/10 rounded-xl text-[14px] font-medium cursor-pointer">Log in</button>
+              </Link>
+              <Link href="/login" className="block">
+                <button className="w-full py-3 bg-[#c084fc] text-[#0a0a0a] rounded-xl text-[14px] font-semibold cursor-pointer">Start Free</button>
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </nav>

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import { ArrowUpRight, Check, Upload, Palette, Globe } from "lucide-react";
 import { BlurText, SplitText, SpotlightCard, AuroraBackground } from "@/components/ReactBits";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 /* ═══════ Hook: scroll‑triggered visibility ═══════ */
 function useInView(opts = {}) {
@@ -20,7 +22,9 @@ function useInView(opts = {}) {
 }
 
 /* ═══════════════════ MAIN ═══════════════════ */
-export default function Homepage({ onNavigate }) {
+export default function Homepage() {
+  const { data: session } = useSession();
+  const dest = session ? "/dashboard" : "/login";
   return (
     <div className="min-h-screen text-white selection:bg-[#c084fc] selection:text-black font-sans relative">
       
@@ -41,21 +45,21 @@ export default function Homepage({ onNavigate }) {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]" />
       </div>
 
-      <Navbar onNavigate={onNavigate} />
-      <Hero onNavigate={onNavigate} />
+      <Navbar />
+      <Hero dest={dest} />
       <ValueProp />
       <TargetAudience />
       <Features />
       <Process />
       <Templates />
-      <Pricing onNavigate={onNavigate} />
+      <Pricing dest={dest} />
       <Footer />
     </div>
   );
 }
 
 /* ═══════════════════ HERO ═══════════════════ */
-function Hero({ onNavigate }) {
+function Hero({ dest }) {
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 lg:px-10 overflow-hidden">
       <div className="max-w-[1400px] mx-auto w-full z-10 grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
@@ -74,13 +78,12 @@ function Hero({ onNavigate }) {
             Upload your resume and our AI crafts a stunning, professional portfolio website in minutes. Zero coding required.
           </p>
           <div className="flex items-center gap-6 anim-in d5">
-            <button
-              onClick={() => onNavigate("login")}
-              className="group px-7 py-3.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[15px] hover:bg-[#d8b4fe] transition-colors flex items-center gap-2"
-            >
-              Build your portfolio
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
+            <Link href={dest}>
+              <button className="group px-7 py-3.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[15px] hover:bg-[#d8b4fe] transition-colors flex items-center gap-2 cursor-pointer">
+                {dest === "/dashboard" ? "Go to Dashboard" : "Build your portfolio"}
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </button>
+            </Link>
             <div className="flex items-center gap-3">
               <div className="flex -space-x-3">
                 {[
@@ -305,7 +308,7 @@ function Templates() {
 }
 
 /* ═══════════════════ PRICING ═══════════════════ */
-function Pricing({ onNavigate }) {
+function Pricing({ dest }) {
   const [ref, vis] = useInView();
   return (
     <section id="pricing" ref={ref} className="py-32 px-6 lg:px-10 bg-[#050505]">
@@ -335,12 +338,11 @@ function Pricing({ onNavigate }) {
                 ))}
               </ul>
 
-              <button 
-                onClick={() => onNavigate("login")}
-                className={`w-full py-4 rounded-full font-medium transition-colors ${plan.highlight ? 'bg-[#c084fc] text-[#0a0a0a] hover:bg-[#d8b4fe]' : 'bg-white/5 hover:bg-white/10 relative z-20'}`}
-              >
-                Get Started
-              </button>
+              <Link href={dest}>
+                <button className={`w-full py-4 rounded-full font-medium transition-colors cursor-pointer ${plan.highlight ? 'bg-[#c084fc] text-[#0a0a0a] hover:bg-[#d8b4fe]' : 'bg-white/5 hover:bg-white/10 relative z-20'}`}>
+                  Get Started
+                </button>
+              </Link>
             </SpotlightCard>
           ))}
         </div>
