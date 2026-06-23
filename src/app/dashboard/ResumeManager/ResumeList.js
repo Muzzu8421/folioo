@@ -82,12 +82,12 @@ export default function ResumeList({ resumes, setResumes }) {
       if (!res.ok) throw new Error(data.message ?? "Upload failed");
 
       toast.success("Resume uploaded! Redirecting to review…", {
-        position: "top-right", autoClose: 3000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 3000, theme: "dark", transition: Bounce,
       });
       router.push(`/dashboard/review?portfolioId=${data.id}`);
     } catch (err) {
       toast.error(err.message ?? "Something went wrong.", {
-        position: "top-right", autoClose: 5000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 5000, theme: "dark", transition: Bounce,
       });
     } finally {
       setUploading(false);
@@ -107,12 +107,12 @@ export default function ResumeList({ resumes, setResumes }) {
       toast.success(data.message, {
         position: "top-right", autoClose: 5000, hideProgressBar: false,
         closeOnClick: true, pauseOnHover: true, draggable: true,
-        theme: "light", transition: Bounce,
+        theme: "dark", transition: Bounce,
       });
       setResumes((prev) => prev.filter((r) => r.id !== resumeId));
     } else {
       toast.error(data.message ?? "Delete failed.", {
-        position: "top-right", autoClose: 5000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 5000, theme: "dark", transition: Bounce,
       });
     }
   };
@@ -132,11 +132,11 @@ export default function ResumeList({ resumes, setResumes }) {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
       toast.success("Download started!", {
-        position: "top-right", autoClose: 4000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 4000, theme: "dark", transition: Bounce,
       });
     } catch {
       toast.error("Could not download file.", {
-        position: "top-right", autoClose: 4000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 4000, theme: "dark", transition: Bounce,
       });
     }
   };
@@ -157,14 +157,14 @@ export default function ResumeList({ resumes, setResumes }) {
     const data = await res.json();
     if (res.ok) {
       toast.success("Portfolio set as active!", {
-        position: "top-right", autoClose: 3000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 3000, theme: "dark", transition: Bounce,
       });
       setResumes((prev) =>
         prev.map((r) => ({ ...r, isActive: r.portfolioid === portfolioId }))
       );
     } else {
       toast.error(data.message ?? "Could not set active.", {
-        position: "top-right", autoClose: 4000, theme: "light", transition: Bounce,
+        position: "top-right", autoClose: 4000, theme: "dark", transition: Bounce,
       });
     }
   };
@@ -173,17 +173,17 @@ export default function ResumeList({ resumes, setResumes }) {
     <>
       {/* Upload overlay loader */}
       {uploading && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm px-4">
-          <div className="flex flex-col items-center gap-4 bg-white rounded-2xl shadow-xl px-8 py-8 border border-gray-100 w-full max-w-xs">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center">
-              <Loader2 className="w-7 h-7 text-white animate-spin" />
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="flex flex-col items-center gap-4 bg-[#111111] rounded-3xl shadow-[0_0_30px_rgba(192,132,252,0.15)] px-8 py-8 border border-white/10 w-full max-w-xs">
+            <div className="w-14 h-14 rounded-2xl bg-[#c084fc]/20 flex items-center justify-center">
+              <Loader2 className="w-7 h-7 text-[#c084fc] animate-spin" />
             </div>
             <div className="text-center">
-              <p className="font-semibold text-gray-900 text-base">Analysing your resume…</p>
-              <p className="text-gray-500 text-sm mt-1">This may take a few seconds</p>
+              <p className="font-semibold text-white text-base">Analysing your resume…</p>
+              <p className="text-gray-400 text-sm mt-1">This may take a few seconds</p>
             </div>
-            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] rounded-full animate-[progress_2s_ease-in-out_infinite]" />
+            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-2">
+              <div className="h-full bg-[#c084fc] rounded-full animate-[progress_2s_ease-in-out_infinite]" />
             </div>
           </div>
         </div>
@@ -201,14 +201,14 @@ export default function ResumeList({ resumes, setResumes }) {
         {/* ── Header ── */}
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Resume Manager</h2>
-            <p className="text-gray-500 text-sm mt-0.5 hidden sm:block">Manage and organize your resumes</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Resume Manager</h2>
+            <p className="text-gray-400 text-sm mt-0.5 hidden sm:block">Manage and organize your resumes</p>
           </div>
           {/* Icon-only on mobile, full button on sm+ */}
           <button
             onClick={handleUploadClick}
             disabled={uploading}
-            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
+            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 bg-[#c084fc] text-[#111111] rounded-xl font-semibold hover:shadow-[0_0_15px_rgba(192,132,252,0.3)] transition-all disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0 cursor-pointer"
           >
             <Upload className="w-4 h-4 flex-shrink-0" />
             <span className="hidden sm:inline text-sm">Upload New Resume</span>
@@ -218,7 +218,7 @@ export default function ResumeList({ resumes, setResumes }) {
         {/* ── Resume list ── */}
         <div className="grid gap-3 sm:gap-4">
           {resumes.length === 0 && (
-            <div className="text-center py-16 text-gray-400">
+            <div className="text-center py-16 text-gray-500">
               <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
               <p className="font-medium text-sm">No resumes yet</p>
               <p className="text-xs mt-1">Upload a resume to get started</p>
@@ -228,12 +228,12 @@ export default function ResumeList({ resumes, setResumes }) {
           {resumes.map((resume) => (
             <div
               key={resume.id}
-              className="bg-white rounded-2xl p-3 sm:p-5 border border-gray-200 hover:border-[#4f46e5] transition-all"
+              className="bg-[#111111] rounded-2xl p-3 sm:p-5 border border-white/5 hover:border-[#c084fc]/50 hover:bg-white/5 transition-all"
             >
               <div className="flex items-center gap-3">
 
                 {/* Icon — smaller on mobile */}
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center text-white flex-shrink-0">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#c084fc]/10 flex items-center justify-center text-[#c084fc] flex-shrink-0">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
 
@@ -241,7 +241,7 @@ export default function ResumeList({ resumes, setResumes }) {
                 <div className="flex-1 min-w-0">
                   {/* Filename + badge row */}
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <p className="font-semibold text-gray-900 text-sm truncate max-w-[140px] xs:max-w-[180px] sm:max-w-xs">
+                    <p className="font-semibold text-gray-200 text-sm truncate max-w-[140px] xs:max-w-[180px] sm:max-w-xs">
                       {resume.filename}
                     </p>
                     {resume.isActive && (
@@ -265,24 +265,24 @@ export default function ResumeList({ resumes, setResumes }) {
                 >
                   <button
                     onClick={() => setOpenMenuId(openMenuId === resume.id ? null : resume.id)}
-                    className="p-1.5 sm:p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+                    className="cursor-pointer p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
                   >
                     <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
 
                   {openMenuId === resume.id && (
                     // on mobile anchor to right edge; ensure it never clips off-screen
-                    <div className="absolute right-0 top-9 z-30 w-40 sm:w-44 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden">
+                    <div className="absolute right-0 top-9 z-30 w-40 sm:w-44 bg-[#1A2235] border border-white/10 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] overflow-hidden">
                       <button
                         onClick={() => { handleView(resume.portfolioid ?? resume.id); setOpenMenuId(null); }}
-                        className="flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="cursor-pointer flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-gray-300 hover:bg-white/5 transition-colors"
                       >
                         <Eye className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
                         View / Edit
                       </button>
                       <button
                         onClick={() => { handleDownload(resume.id, resume.filename); setOpenMenuId(null); }}
-                        className="flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="cursor-pointer flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-gray-300 hover:bg-white/5 transition-colors"
                       >
                         <Download className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
                         Download
@@ -290,16 +290,16 @@ export default function ResumeList({ resumes, setResumes }) {
                       {!resume.isActive && (
                         <button
                           onClick={() => { handleSetActive(resume.portfolioid); setOpenMenuId(null); }}
-                          className="flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-[#4f46e5] hover:bg-indigo-50 transition-colors"
+                          className="cursor-pointer flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-[#c084fc] hover:bg-white/5 transition-colors"
                         >
                           <Zap className="w-3.5 h-3.5 flex-shrink-0" />
                           Set as Active
                         </button>
                       )}
-                      <div className="h-px bg-gray-100 mx-2" />
+                      <div className="h-px bg-white/10 mx-2" />
                       <button
                         onClick={() => { handleDelete(resume.id, resume.portfolioid); setOpenMenuId(null); }}
-                        className="flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                        className="cursor-pointer flex items-center gap-2.5 w-full px-3.5 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
                       >
                         <Trash2 className="w-3.5 h-3.5 flex-shrink-0" />
                         Delete

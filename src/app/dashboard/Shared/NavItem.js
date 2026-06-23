@@ -2,16 +2,16 @@ export default function NavItem({ icon, label, active = false, badge, onClick })
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-all cursor-pointer ${
         active
-          ? "bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white font-semibold"
-          : "text-gray-700 hover:bg-gray-100"
+          ? "bg-[#c084fc]/10 text-[#c084fc] font-semibold shadow-[0_0_15px_rgba(192,132,252,0.15)]"
+          : "text-gray-400 hover:text-gray-200 hover:bg-white/5 font-medium"
       }`}
     >
-      {icon}
+      <div className={active ? "text-[#c084fc]" : "text-gray-500"}>{icon}</div>
       <span className="flex-1 text-left">{label}</span>
       {badge && (
-        <span className="px-2 py-0.5 bg-white text-[#4f46e5] rounded-full text-xs font-semibold">
+        <span className="px-2 py-0.5 bg-[#c084fc] text-[#111111] rounded-full text-xs font-bold">
           {badge}
         </span>
       )}

@@ -28,15 +28,15 @@ export default function SettingsContent() {
 
   return (
     <div className="max-w-4xl">
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-        <div className="border-b border-gray-200">
+      <div className="bg-[#111111] rounded-3xl border border-white/5 overflow-hidden">
+        <div className="border-b border-white/5">
           <nav className="flex overflow-x-auto">
             <button
               onClick={() => setActiveTab("profile")}
-              className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${
+              className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 activeTab === "profile"
-                  ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "text-[#c084fc] border-b-2 border-[#c084fc] bg-[#c084fc]/5"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
               }`}
             >
               <User className="w-4 h-4 inline mr-2" />
@@ -44,10 +44,10 @@ export default function SettingsContent() {
             </button>
             <button
               onClick={() => setActiveTab("account")}
-              className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${
+              className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 activeTab === "account"
-                  ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "text-[#c084fc] border-b-2 border-[#c084fc] bg-[#c084fc]/5"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
               }`}
             >
               <Shield className="w-4 h-4 inline mr-2" />

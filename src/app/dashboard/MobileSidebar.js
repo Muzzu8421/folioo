@@ -23,50 +23,35 @@ export default function MobileSidebar({
   if (!isOpen) return null;
 
   return (
-    <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
-      <div className="absolute inset-y-0 left-0 w-64 bg-white">
+    <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity">
+      <div className="absolute inset-y-0 left-0 w-64 bg-[#111111] border-r border-white/5 flex flex-col h-full shadow-2xl">
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-            <button
-              onClick={() => onNavigate("home")}
-              className="flex items-center gap-2"
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center">
-                <span
-                  className="text-white font-bold text-xl"
-                  style={{ fontFamily: "var(--font-poppins)" }}
-                >
-                  F
-                </span>
-              </div>
-              <span
-                className="text-2xl font-bold bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] bg-clip-text text-transparent"
-                style={{ fontFamily: "var(--font-poppins)" }}
-              >
-                Folioo
-              </span>
-            </button>
-            <button onClick={onClose}>
-              <XIcon className="w-6 h-6 text-gray-700" />
+          {/* Logo & Close */}
+          <div className="p-6 pb-4 flex items-center justify-between border-b border-white/5">
+            <div className="flex items-center gap-3 cursor-pointer">
+              <Image src="/io.png" alt="Folioo Logo" width={32} height={32} />
+              <span className="font-semibold text-lg tracking-wide text-white">Folioo</span>
+            </div>
+            <button onClick={onClose} className="p-1 text-gray-500 hover:text-gray-300 transition-colors cursor-pointer">
+              <XIcon size={20} />
             </button>
           </div>
 
           {/* User Profile */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center gap-3 p-3">
+          <div className="p-4 border-b border-white/5">
+            <div className="flex items-center gap-3 p-2">
               <Image
                 src={userData.profilePicture}
                 alt="User Avatar"
                 width={40}
                 height={40}
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover border border-white/10"
               />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 truncate">
-                  {userData.name}
+                <p className="font-medium text-gray-200 truncate">
+                  {userData.fullname || userData.name}
                 </p>
-                <p className="text-sm text-gray-500 truncate">
+                <p className="text-xs text-gray-500 truncate">
                   {userData.email}
                 </p>
               </div>
@@ -121,19 +106,31 @@ export default function MobileSidebar({
           </nav>
 
           {/* Bottom Section */}
-          <div className="p-4 border-t border-gray-200 space-y-1">
-            <NavItem
-              icon={<HelpCircle className="w-5 h-5" />}
-              label="Help & Support"
-            />
-            <NavItem
-              icon={<LogOut className="w-5 h-5" />}
-              label="Logout"
-              onClick={() => {
-                onClose();
-                signOut();
-              }}
-            />
+          <div className="p-4 border-t border-white/5 space-y-4">
+            <div className="p-4 rounded-2xl bg-gradient-to-b from-[#1A2235] to-[#111111] border border-[#c084fc]/20 shadow-[0_0_20px_rgba(192,132,252,0.1)] mb-4">
+              <h4 className="text-sm font-medium text-white mb-1.5">You&apos;ve reached your limit!</h4>
+              <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
+                Please upgrade your plan to avoid losing your files.
+              </p>
+              <button className="w-full py-2 bg-[#c084fc] text-[#111111] rounded-full text-xs font-semibold hover:bg-cyan-300 transition-colors cursor-pointer">
+                Upgrade Plan
+              </button>
+            </div>
+            
+            <div className="space-y-1">
+              <NavItem
+                icon={<HelpCircle className="w-5 h-5" />}
+                label="Help & Support"
+              />
+              <NavItem
+                icon={<LogOut className="w-5 h-5" />}
+                label="Logout"
+                onClick={() => {
+                  onClose();
+                  signOut();
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

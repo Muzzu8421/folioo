@@ -20,48 +20,51 @@ const chartData = [
 
 export default function AnalyticsChart() {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">
+    <div className="bg-[#111111] rounded-3xl p-6 border border-white/5">
+      <h3 className="text-xl font-medium text-gray-200 mb-6">
         Portfolio Performance
       </h3>
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="date" stroke="#6b7280" />
-            <YAxis stroke="#6b7280" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0d" />
+            <XAxis dataKey="date" stroke="#4B5563" axisLine={false} tickLine={false} />
+            <YAxis stroke="#4B5563" axisLine={false} tickLine={false} />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#ffffff",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
+                backgroundColor: "#111111",
+                border: "1px solid #ffffff1a",
+                borderRadius: "12px",
+                color: "#fff"
               }}
             />
             <Line
               type="monotone"
               dataKey="views"
-              stroke="#4f46e5"
+              stroke="#c084fc"
               strokeWidth={3}
-              dot={{ fill: "#4f46e5", r: 4 }}
+              dot={{ fill: "#111111", stroke: "#c084fc", strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: "#c084fc", stroke: "#fff" }}
             />
             <Line
               type="monotone"
               dataKey="clicks"
-              stroke="#fb923c"
+              stroke="#8B949E"
               strokeWidth={3}
-              dot={{ fill: "#fb923c", r: 4 }}
+              dot={{ fill: "#111111", stroke: "#8B949E", strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, fill: "#8B949E", stroke: "#fff" }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="flex items-center justify-center gap-8 mt-4">
+      <div className="flex items-center justify-center gap-8 mt-6">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-[#4f46e5] rounded-full"></div>
-          <span className="text-sm text-gray-700">Views</span>
+          <div className="w-3 h-3 bg-[#c084fc] rounded-full shadow-[0_0_8px_rgba(192,132,252,0.8)]"></div>
+          <span className="text-sm text-gray-400">Views</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-[#fb923c] rounded-full"></div>
-          <span className="text-sm text-gray-700">Clicks</span>
+          <div className="w-3 h-3 bg-[#8B949E] rounded-full"></div>
+          <span className="text-sm text-gray-400">Clicks</span>
         </div>
       </div>
     </div>

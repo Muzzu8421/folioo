@@ -99,17 +99,17 @@ function EmptyState() {
     <>
       {/* ── Same overlay loader as ResumeList ── */}
       {uploading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm px-4">
-          <div className="flex flex-col items-center gap-4 bg-white rounded-2xl shadow-xl px-8 py-8 border border-gray-100 w-full max-w-xs">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center">
-              <Loader2 className="w-7 h-7 text-white animate-spin" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4">
+          <div className="flex flex-col items-center gap-4 bg-[#111111] rounded-3xl shadow-[0_0_30px_rgba(192,132,252,0.15)] px-8 py-8 border border-white/10 w-full max-w-xs">
+            <div className="w-14 h-14 rounded-2xl bg-[#c084fc]/20 flex items-center justify-center">
+              <Loader2 className="w-7 h-7 text-[#c084fc] animate-spin" />
             </div>
             <div className="text-center">
-              <p className="font-semibold text-gray-900 text-base">Analysing your resume…</p>
-              <p className="text-gray-500 text-sm mt-1">This may take a few seconds</p>
+              <p className="font-medium text-white text-base">Analysing your resume…</p>
+              <p className="text-gray-400 text-sm mt-1">This may take a few seconds</p>
             </div>
-            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] rounded-full animate-[progress_2s_ease-in-out_infinite]" />
+            <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-2">
+              <div className="h-full bg-[#c084fc] rounded-full animate-[progress_2s_ease-in-out_infinite]" />
             </div>
           </div>
         </div>
@@ -119,10 +119,10 @@ function EmptyState() {
 
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1.5">
+          <h2 className="text-2xl sm:text-3xl font-medium text-white mb-2">
             Resume Manager
           </h2>
-          <p className="text-gray-500 text-sm sm:text-base">
+          <p className="text-gray-400 text-sm sm:text-base">
             Upload your resume to automatically populate your portfolio
           </p>
         </div>
@@ -132,10 +132,10 @@ function EmptyState() {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-12 transition-all ${
+          className={`relative border-2 border-dashed rounded-3xl p-6 sm:p-12 transition-all bg-[#111111] ${
             isDragging
-              ? "border-[#4f46e5] bg-[#4f46e5]/5"
-              : "border-gray-200 hover:border-gray-300"
+              ? "border-[#c084fc] bg-[#c084fc]/5 shadow-[0_0_20px_rgba(192,132,252,0.1)]"
+              : "border-white/10 hover:border-[#c084fc]/50 hover:bg-white/5"
           }`}
         >
           <input
@@ -150,11 +150,11 @@ function EmptyState() {
             {uploadedFile ? (
               /* ── File selected state ── */
               <>
-                <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <FileText className="w-7 h-7 sm:w-10 sm:h-10 text-emerald-500" />
+                <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                  <FileText className="w-7 h-7 sm:w-10 sm:h-10 text-emerald-400" />
                 </div>
 
-                <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-1 truncate max-w-[220px] sm:max-w-sm mx-auto">
+                <h3 className="text-base sm:text-xl font-medium text-white mb-1 truncate max-w-[220px] sm:max-w-sm mx-auto">
                   {uploadedFile.name}
                 </h3>
                 <p className="text-gray-500 text-sm mb-5 sm:mb-6">
@@ -165,14 +165,14 @@ function EmptyState() {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full sm:w-auto px-5 py-2.5 border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-all"
+                    className="cursor-pointer w-full sm:w-auto px-5 py-2.5 border border-white/10 text-gray-300 rounded-xl text-sm font-semibold hover:bg-white/5 transition-all"
                   >
                     Change File
                   </button>
                   <button
                     onClick={handleExtractClick}
                     disabled={uploading}
-                    className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="cursor-pointer w-full sm:w-auto px-5 py-2.5 bg-[#c084fc] text-[#111111] rounded-xl text-sm font-semibold hover:shadow-[0_0_15px_rgba(192,132,252,0.3)] transition-all inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     <Sparkles className="w-4 h-4" />
                     Extract Information
@@ -182,26 +182,26 @@ function EmptyState() {
             ) : (
               /* ── Empty / drag state ── */
               <>
-                <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center">
-                  <Upload className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                <div className="w-14 h-14 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full bg-[#c084fc]/10 flex items-center justify-center">
+                  <Upload className="w-7 h-7 sm:w-10 sm:h-10 text-[#c084fc]" />
                 </div>
 
-                <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-1.5">
+                <h3 className="text-base sm:text-xl font-medium text-white mb-1.5">
                   Drop your resume here
                 </h3>
-                <p className="text-gray-500 text-sm mb-5 sm:mb-6 hidden sm:block">
+                <p className="text-gray-400 text-sm mb-5 sm:mb-6 hidden sm:block">
                   or click to browse from your computer
                 </p>
 
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all inline-flex items-center gap-2"
+                  className="cursor-pointer px-5 py-2.5 bg-[#c084fc] text-[#111111] rounded-xl text-sm font-semibold hover:shadow-[0_0_15px_rgba(192,132,252,0.3)] transition-all inline-flex items-center gap-2"
                 >
                   <Upload className="w-4 h-4" />
                   Choose File
                 </button>
 
-                <p className="text-xs text-gray-400 mt-3">
+                <p className="text-xs text-gray-500 mt-4">
                   PDF and DOCX · Max 5 MB
                 </p>
               </>

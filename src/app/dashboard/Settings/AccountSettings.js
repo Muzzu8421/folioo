@@ -37,7 +37,7 @@ export default function AccountSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
       } else {
@@ -50,7 +50,7 @@ export default function AccountSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
       }
@@ -64,7 +64,7 @@ export default function AccountSettings({ userData, setUserData }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
       });
     }
   };
@@ -79,7 +79,7 @@ export default function AccountSettings({ userData, setUserData }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
         transition: Bounce,
       });
       return;
@@ -94,7 +94,7 @@ export default function AccountSettings({ userData, setUserData }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
         transition: Bounce,
       });
       return;
@@ -125,7 +125,7 @@ export default function AccountSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
       } else if (data.success === true) {
@@ -137,7 +137,7 @@ export default function AccountSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
         setUserData((prev) => ({ ...prev, hasPassword: true }));
@@ -157,7 +157,7 @@ export default function AccountSettings({ userData, setUserData }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
         transition: Bounce,
       });
     }
@@ -173,16 +173,16 @@ export default function AccountSettings({ userData, setUserData }) {
               <Mail className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Verify Your Email
               </h3>
-              <p className="text-sm text-gray-700 mb-4">
+              <p className="text-sm text-gray-300 mb-4">
                 Please verify your email address to secure your account and
                 unlock all features.
               </p>
               <button
                 onClick={handleVerifyEmail}
-                className="cursor-pointer px-6 py-2 bg-[#4f46e5] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="cursor-pointer px-6 py-2 bg-[#f59e0b] text-white rounded-lg font-semibold hover:bg-opacity-80 transition-all"
               >
                 Send Verification Email
               </button>
@@ -193,12 +193,12 @@ export default function AccountSettings({ userData, setUserData }) {
 
       {/* Change Password */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-white mb-4">
           Change Password
         </h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label className="block text-sm font-semibold text-gray-200 mb-2">
               Current Password
             </label>
             <div className="relative">
@@ -212,7 +212,7 @@ export default function AccountSettings({ userData, setUserData }) {
                   })
                 }
                 disabled={!userData.hasPassword}
-                className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 pr-12 border border-white/10 bg-black/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c084fc] focus:border-transparent transition-all"
                 placeholder={
                   !userData.hasPassword
                     ? "Set a password first"
@@ -238,7 +238,7 @@ export default function AccountSettings({ userData, setUserData }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label className="block text-sm font-semibold text-gray-200 mb-2">
               New Password
             </label>
             <div className="relative">
@@ -251,7 +251,7 @@ export default function AccountSettings({ userData, setUserData }) {
                     newPassword: e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 pr-12 border border-white/10 bg-black/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c084fc] focus:border-transparent transition-all"
                 placeholder="Enter new password"
               />
               <button
@@ -272,7 +272,7 @@ export default function AccountSettings({ userData, setUserData }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
+            <label className="block text-sm font-semibold text-gray-200 mb-2">
               Confirm New Password
             </label>
             <div className="relative">
@@ -285,7 +285,7 @@ export default function AccountSettings({ userData, setUserData }) {
                     confirmPassword: e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 pr-12 border border-white/10 bg-black/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c084fc] focus:border-transparent transition-all"
                 placeholder="Confirm new password"
               />
               <button
@@ -307,7 +307,7 @@ export default function AccountSettings({ userData, setUserData }) {
               type="button"
               onClick={handlePasswordUpdate}
               disabled={isLoading}
-              className="px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer px-6 py-3 bg-[#c084fc] text-[#111111] rounded-xl font-semibold hover:shadow-[0_0_15px_rgba(192,132,252,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? <Loader /> : "Update Password"}
             </button>

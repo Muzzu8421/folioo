@@ -26,38 +26,38 @@ const TemplatesManager = () => {
     },
   ];
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
       {TEMPLATES.map((template) => (
         <button
           key={template.id}
           onClick={() => setSelected(template.id)}
-          className={`text-left rounded-2xl border-2 overflow-hidden transition-all hover:shadow-lg }`}
+          className={`text-left rounded-3xl border border-white/5 bg-[#111111] overflow-hidden transition-all hover:border-[#c084fc]/50 hover:shadow-[0_0_20px_rgba(192,132,252,0.1)] cursor-pointer`}
         >
           {/* Mockup */}
-          <div className="h-44 relative bg-gray-900 flex items-center justify-center">
+          <div className="h-44 relative bg-black/40 flex items-center justify-center border-b border-white/5">
             <Image
               src={"/" + template.id + ".png"}
               alt={template.name}
               fill
-              className="object-fill"
+              className="object-cover"
             />
           </div>
 
           {/* Info */}
-          <div className={`p-4 transition-colors`}>
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-semibold text-gray-900 text-sm">
+          <div className={`p-5 transition-colors`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-medium text-gray-200 text-base">
                 {template.name}
               </span>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed mb-3">
+            <p className="text-sm text-gray-500 leading-relaxed mb-4">
               {template.description}
             </p>
-            <div className="flex gap-1.5 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
               {template.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+                  className="text-xs px-3 py-1 rounded-full bg-[#c084fc]/10 text-[#c084fc] font-medium"
                 >
                   {tag}
                 </span>

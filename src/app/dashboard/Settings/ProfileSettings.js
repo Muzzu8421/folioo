@@ -64,7 +64,7 @@ export default function ProfileSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
       } else if (data.success === true) {
@@ -78,7 +78,7 @@ export default function ProfileSettings({ userData, setUserData }) {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "dark",
           transition: Bounce,
         });
       }
@@ -92,7 +92,7 @@ export default function ProfileSettings({ userData, setUserData }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "dark",
         transition: Bounce,
       });
     }
@@ -102,7 +102,7 @@ export default function ProfileSettings({ userData, setUserData }) {
     <div className="space-y-8">
       {/* Profile Picture */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <h3 className="text-lg font-semibold text-white mb-4">
           Profile Picture
         </h3>
         <div className="flex items-center gap-6">
@@ -110,13 +110,13 @@ export default function ProfileSettings({ userData, setUserData }) {
             <img
               src={userData.profilePicture}
               alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-gray-200"
+              className="w-24 h-24 rounded-full object-cover border-4 border-[#111111] shadow-[0_0_15px_rgba(192,132,252,0.2)]"
             />
             <label
               htmlFor="profile-picture"
-              className="absolute bottom-0 right-0 w-8 h-8 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] rounded-full flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow"
+              className="absolute bottom-0 right-0 w-8 h-8 bg-[#c084fc] rounded-full flex items-center justify-center cursor-pointer hover:shadow-[0_0_15px_rgba(192,132,252,0.5)] transition-shadow text-[#111111]"
             >
-              <Camera className="w-4 h-4 text-white" />
+              <Camera className="w-4 h-4" />
               <input
                 id="profile-picture"
                 type="file"
@@ -127,14 +127,14 @@ export default function ProfileSettings({ userData, setUserData }) {
             </label>
           </div>
           <div>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-gray-400 mb-2">
               JPG, GIF or PNG. Max size 2MB.
             </p>
             <button
               onClick={() =>
                 document.getElementById("profile-picture").click()
               }
-              className="text-sm text-[#4f46e5] font-semibold hover:underline"
+              className="text-sm text-[#c084fc] font-semibold hover:underline cursor-pointer"
             >
               Upload new picture
             </button>
@@ -145,7 +145,7 @@ export default function ProfileSettings({ userData, setUserData }) {
       {/* Profile Form */}
       <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
+          <label className="block text-sm font-semibold text-gray-200 mb-2">
             Full Name
           </label>
           <input
@@ -153,13 +153,13 @@ export default function ProfileSettings({ userData, setUserData }) {
             name="fullname"
             value={formData.fullname}
             onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-white/10 bg-black/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c084fc] focus:border-transparent transition-all"
             placeholder="Enter your full name"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
+          <label className="block text-sm font-semibold text-gray-200 mb-2">
             Username
           </label>
           <div className="relative">
@@ -171,7 +171,7 @@ export default function ProfileSettings({ userData, setUserData }) {
               name="username"
               value={formData.username}
               onChange={handleInputChange}
-              className="w-full pl-28 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#4f46e5] focus:border-transparent transition-all"
+              className="w-full pl-28 pr-4 py-3 border border-white/10 bg-black/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c084fc] focus:border-transparent transition-all"
               placeholder="username"
             />
           </div>
@@ -181,11 +181,11 @@ export default function ProfileSettings({ userData, setUserData }) {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
+          <label className="block text-sm font-semibold text-gray-200 mb-2">
             Email Address
           </label>
           <div className="flex items-center gap-3">
-            <div className="flex-1 px-4 py-3 bg-gray-100 border border-gray-200 rounded-xl text-gray-700">
+            <div className="flex-1 px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-gray-400">
               {userData.email}
             </div>
             {userData.emailVerified ? (
@@ -205,7 +205,7 @@ export default function ProfileSettings({ userData, setUserData }) {
         <div className="flex justify-end gap-3 pt-4">
           <button
             type="button"
-            className="px-6 cursor-pointer py-3 border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+            className="px-6 cursor-pointer py-3 border border-white/10 text-gray-300 rounded-xl font-semibold hover:bg-white/5 transition-colors"
             onClick={() => {
               setFormData({
                 fullname: userData.fullname,
@@ -219,7 +219,7 @@ export default function ProfileSettings({ userData, setUserData }) {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="cursor-pointer px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+            className="cursor-pointer px-6 py-3 bg-[#c084fc] text-[#111111] rounded-xl font-semibold hover:shadow-[0_0_15px_rgba(192,132,252,0.3)] transition-all"
           >
             {isLoading ? <Loader /> : "Save Changes"}
           </button>

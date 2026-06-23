@@ -13,17 +13,18 @@ export default function PortfolioPreview({ userName }) {
     toast.success("Copied to clipboard!", {
       position: "top-right",
       autoClose: 4000,
-      theme: "light",
+      theme: "dark",
       transition: Bounce,
     });
   };
+
   return (
-    <div className="bg-white rounded-2xl p-6 mb-8 border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">Your Portfolio</h3>
+    <div className="bg-[#111111] rounded-3xl p-6 mb-8 border border-white/5">
+      <h3 className="text-xl font-medium text-gray-200 mb-6">Your Portfolio</h3>
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Portfolio Preview */}
         <div className="flex-shrink-0">
-          <div className="w-full lg:w-64 aspect-video rounded-lg overflow-hidden border-4 border-gradient">
+          <div className="w-full lg:w-64 aspect-video rounded-xl overflow-hidden border-2 border-white/10">
             <img
               src="https://images.unsplash.com/photo-1727686679920-79be3ffe07d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
               alt="Portfolio preview"
@@ -39,18 +40,21 @@ export default function PortfolioPreview({ userName }) {
             <Link
               target="_blank"
               href={link}
-              className="flex-1 bg-gray-100 px-4 py-2 rounded-lg font-mono text-sm text-gray-700"
+              className="flex-1 bg-[#0a0a0a] border border-white/5 px-4 py-3 rounded-xl font-mono text-sm text-gray-300 hover:text-[#c084fc] transition-colors"
             >
               <div>{link}</div>
             </Link>
             {/* Copy Button to copy portfolio link to clipboard */}
-            <button className="cursor-pointer p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-              <Copy onClick={handleCopy} className="w-5 h-5" />
+            <button 
+              onClick={handleCopy}
+              className="cursor-pointer p-3 text-[#c084fc] bg-[#c084fc]/10 hover:bg-[#c084fc]/20 rounded-xl transition-colors"
+            >
+              <Copy className="w-5 h-5" />
             </button>
           </div>
 
           {/* QR Code */}
-          <div className="mt-4 inline-block">
+          <div className="mt-4 inline-block p-2 bg-white rounded-xl">
             <QRCodeCanvas value={link} size={100} />
           </div>
         </div>

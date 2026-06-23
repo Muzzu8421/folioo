@@ -3,8 +3,8 @@ import QuickActionCard from "../Shared/QuickActionCard";
 
 export default function QuickActions() {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">
+    <div className="bg-[#111111] rounded-3xl p-6 border border-white/5">
+      <h3 className="text-xl font-medium text-gray-200 mb-6">
         Quick Actions
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
