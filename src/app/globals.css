@@ -1,62 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* Folioo Brand Colors */
-  --indigo-600: #4f46e5;
-  --purple-600: #7c3aed;
-  --orange-400: #fb923c;
-
-  /* Typography */
-  --font-inter: "Inter", sans-serif;
-  --font-poppins: "Poppins", sans-serif;
+  --accent: #c084fc;
+  --dark: #0a0a0a;
+  --card: #111111;
 }
 
 @layer base {
   body {
-    font-family: var(--font-inter);
+    font-family: "DM Sans", sans-serif;
+    background: #0a0a0a;
+    color: #fff;
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-poppins);
+  ::selection {
+    background: #c084fc;
+    color: #000;
   }
 }
+
+/* Minimal animations — only subtle fade for scroll reveals */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-in {
+  animation: fadeIn 0.6s ease both;
+}
+.d1 { animation-delay: 80ms; }
+.d2 { animation-delay: 160ms; }
+.d3 { animation-delay: 240ms; }
+.d4 { animation-delay: 320ms; }
+.d5 { animation-delay: 400ms; }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
 
 /* Scrollbar */
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #2d1f6e transparent;
-}
-
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-/* track (background) */
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* handle */
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #4f46e5, #7c3aed, #fb923c);
-  border-radius: 999px;
-}
-
-/* handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #6366f1, #9333ea, #f97316);
-}
-
-/* corner where horizontal + vertical scrollbars meet */
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
+* { scrollbar-width: thin; scrollbar-color: #c084fc transparent; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 99px; }

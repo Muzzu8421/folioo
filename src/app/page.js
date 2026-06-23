@@ -1,584 +1,368 @@
 "use client";
-import { useState, useEffect } from "react";
-import {
-  Sparkles,
-  Palette,
-  Rocket,
-  RefreshCw,
-  Upload,
-  Link2,
-  Menu,
-  X,
-  Star,
-  Check,
-  ArrowRight,
-} from "lucide-react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
+import { ArrowUpRight, Check, Upload, Palette, Globe } from "lucide-react";
+import { BlurText, SplitText, SpotlightCard, AuroraBackground } from "@/components/ReactBits";
 
-export default function Homepage({ onNavigate }) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+/* ═══════ Hook: scroll‑triggered visibility ═══════ */
+function useInView(opts = {}) {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const ob = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); ob.unobserve(e.target); } },
+      { threshold: 0.1, ...opts },
+    );
+    if (ref.current) ob.observe(ref.current);
+    return () => ob.disconnect();
   }, []);
+  return [ref, vis];
+}
 
+/* ═══════════════════ MAIN ═══════════════════ */
+export default function Homepage({ onNavigate }) {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar isScrolled={isScrolled} onNavigate={onNavigate} />
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#f9fafb] to-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-block px-4 py-2 bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] bg-clip-text text-transparent text-sm font-semibold mb-6">
-            Transform Your Career
-          </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 max-w-5xl mx-auto">
-            Turn Your Resume Into a Stunning Portfolio Website
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-            Create a professional portfolio in minutes. No coding required. Just
-            upload your resume and let AI do the magic.
+    <div className="min-h-screen text-white selection:bg-[#c084fc] selection:text-black font-sans relative">
+      
+      {/* Optimized Fixed Background Video */}
+      <div className="fixed inset-0 -z-50 w-full h-full bg-[#0a0a0a] overflow-hidden pointer-events-none">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover opacity-50 will-change-transform"
+          style={{ transform: "translateZ(0)" }} // Hardware acceleration to prevent lag
+        >
+          <source src="/bg.mp4" type="video/mp4" />
+        </video>
+        {/* Cinematic dark overlay for text contrast and blending */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]" />
+      </div>
+
+      <Navbar onNavigate={onNavigate} />
+      <Hero onNavigate={onNavigate} />
+      <ValueProp />
+      <TargetAudience />
+      <Features />
+      <Process />
+      <Templates />
+      <Pricing onNavigate={onNavigate} />
+      <Footer />
+    </div>
+  );
+}
+
+/* ═══════════════════ HERO ═══════════════════ */
+function Hero({ onNavigate }) {
+  return (
+    <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 lg:px-10 overflow-hidden">
+      <div className="max-w-[1400px] mx-auto w-full z-10 grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+        <div className="anim-in d1">
+          <p className="text-[13px] text-white/50 uppercase tracking-[0.1em] mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#c084fc]" />
+            Folioo AI Builder
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <h1 className="text-[clamp(3rem,6vw,6rem)] font-normal leading-[1] tracking-tight mb-8">
+            <BlurText text="Portfolios that" delay={0} /> <br />
+            <span className="italic text-[#c084fc]">
+              <SplitText text="speak louder." delay={0.2} />
+            </span>
+          </h1>
+          <p className="text-lg text-white/40 max-w-md mb-10 font-light leading-relaxed anim-in d4">
+            Upload your resume and our AI crafts a stunning, professional portfolio website in minutes. Zero coding required.
+          </p>
+          <div className="flex items-center gap-6 anim-in d5">
             <button
               onClick={() => onNavigate("login")}
-              className="px-8 py-4 bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold text-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+              className="group px-7 py-3.5 bg-[#c084fc] text-[#0a0a0a] rounded-full font-semibold text-[15px] hover:bg-[#d8b4fe] transition-colors flex items-center gap-2"
             >
-              Create Your Portfolio Free
+              Build your portfolio
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
-            <button className="px-8 py-4 border-2 border-gray-200 text-gray-900 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors">
-              See Examples
-            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-3">
+                {[
+                  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=faces&fit=crop&w=100&h=100",
+                  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=faces&fit=crop&w=100&h=100",
+                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=100&h=100"
+                ].map((src, i) => (
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0a0a0a] overflow-hidden bg-[#111]">
+                     <img src={src} alt="User" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+              <div className="text-[12px] text-white/40 leading-tight">
+                Trusted by <br /><span className="text-white/80 font-medium">2,500+</span> pros
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Hero Mockup */}
-          <div className="relative max-w-5xl mx-auto">
-            <div className="relative rounded-2xl overflow-hidden shadow-xl">
-              <Image
-                src="https://images.unsplash.com/photo-1609941535028-83e3b0291aae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBwb3J0Zm9saW8lMjB3ZWJzaXRlJTIwbGFwdG9wJTIwbW9ja3VwfGVufDF8fHx8MTc3MDI5Nzk1OXww&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Portfolio website mockup"
-                width={1080}
-                height={600}
-                className="w-full h-auto"
+        <div className="relative anim-in d3">
+          <SpotlightCard className="rounded-3xl border border-white/5 bg-[#111] p-2">
+            <div className="rounded-2xl overflow-hidden relative aspect-[4/3] bg-[#050505]">
+              {/* RESTORED PREVIOUS IMAGE (modern.png) */}
+              <img 
+                src="/modern.png" 
+                alt="Portfolio Preview" 
+                className="object-cover object-top w-full h-full group-hover:scale-105 transition-transform duration-1000" 
               />
             </div>
-          </div>
+            
+            <div className="absolute -left-6 top-1/4 p-4 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-md border border-white/10 flex flex-col items-center gap-2 shadow-2xl">
+              <p className="text-xs text-white/40">Build time</p>
+              <p className="text-xl text-[#c084fc] font-medium">30s</p>
+            </div>
+          </SpotlightCard>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Social Proof */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-y border-gray-200">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm text-gray-500 mb-8">
-            Trusted by professionals from
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 opacity-40">
-            <div className="text-2xl font-bold text-gray-900">Google</div>
-            <div className="text-2xl font-bold text-gray-900">Microsoft</div>
-            <div className="text-2xl font-bold text-gray-900">Amazon</div>
-            <div className="text-2xl font-bold text-gray-900">Meta</div>
-            <div className="text-2xl font-bold text-gray-900">Apple</div>
-          </div>
+/* ═══════════════════ VALUE PROP ═══════════════════ */
+function ValueProp() {
+  const [ref, vis] = useInView();
+  return (
+    <section ref={ref} className="py-24 px-6 lg:px-10 border-t border-white/5">
+      <div className={`max-w-[1400px] mx-auto text-center ${vis ? 'anim-in' : 'opacity-0'}`}>
+        <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-normal leading-[1.1] max-w-4xl mx-auto">
+          We don&apos;t just build websites. <br />
+          We craft <span className="italic text-[#c084fc]">digital identities</span> for your career goals.
+        </h2>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════ TARGET AUDIENCE ═══════════════════ */
+function TargetAudience() {
+  const [ref, vis] = useInView();
+  const audiences = [
+    { num: "01", title: "Software Engineers", desc: "Showcase GitHub repos, tech stacks, and side projects effortlessly." },
+    { num: "02", title: "Product Designers", desc: "Highlight case studies, Figma files, and your design process." },
+    { num: "03", title: "Marketing Pros", desc: "Display campaign results, KPIs, and strategic initiatives." },
+    { num: "04", title: "Founders & Leaders", desc: "Tell your professional story and build personal brand authority." },
+  ];
+
+  return (
+    <section id="services" ref={ref} className="py-24 px-6 lg:px-10 bg-[#050505]">
+      <div className="max-w-[1400px] mx-auto">
+        <div className={`mb-16 ${vis ? 'anim-in' : 'opacity-0'}`}>
+          <p className="text-lg font-light">We do our best <br/><span className="italic text-[#c084fc]">work with</span></p>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Everything You Need to Stand Out
-            </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Powerful features designed to showcase your professional journey
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard
-              icon={<Sparkles className="w-12 h-12" />}
-              title="AI-Powered Conversion"
-              description="Upload your resume and our AI transforms it into a beautiful portfolio website"
-            />
-            <FeatureCard
-              icon={<Palette className="w-12 h-12" />}
-              title="Customizable Templates"
-              description="Choose from dozens of professional templates designed for different industries"
-            />
-            <FeatureCard
-              icon={<Rocket className="w-12 h-12" />}
-              title="One-Click Deploy"
-              description="Publish your portfolio with a custom domain in seconds"
-            />
-            <FeatureCard
-              icon={<RefreshCw className="w-12 h-12" />}
-              title="Always Up-to-Date"
-              description="Update your resume once, and your portfolio updates automatically"
-            />
-          </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 border-t border-white/10 pt-16 relative">
+          {audiences.map((aud, i) => (
+            <div key={aud.num} className={`flex gap-6 relative z-10 ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 100}ms` }}>
+              <div className="text-5xl font-light text-[#c084fc]/30">{aud.num}</div>
+              <div>
+                <h3 className="text-2xl font-normal mb-3">{aud.title}</h3>
+                <p className="text-white/40 leading-relaxed font-light">{aud.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* How It Works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              How It Works
-            </h2>
-            <p className="text-xl text-gray-700">
-              Three simple steps to your dream portfolio
-            </p>
-          </div>
+/* ═══════════════════ FEATURES (The actual grid section the user wanted filled) ═══════════════════ */
+function Features() {
+  const [ref, vis] = useInView();
+  
+  // Adding assets directly into the features grid as requested
+  const features = [
+    { 
+      title: "AI Resume Parsing", 
+      desc: "Instant extraction", 
+      img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000&auto=format&fit=crop" // Laptop coding 
+    },
+    { 
+      title: "Custom Themes", 
+      desc: "Light & dark modes", 
+      img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" // 3D abstract
+    },
+    { 
+      title: "Analytics", 
+      desc: "Visitor tracking", 
+      img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" // Dashboard/Charts
+    },
+    { 
+      title: "Custom Domains", 
+      desc: "Connect your own URL", 
+      img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop" // Globe/Internet
+    },
+  ];
 
-          <div className="grid md:grid-cols-3 gap-12">
-            <StepCard
-              number="01"
-              icon={<Upload className="w-12 h-12" />}
-              title="Upload Resume"
-              description="Simply drag and drop your resume in PDF or DOCX format"
-            />
-            <StepCard
-              number="02"
-              icon={<Palette className="w-12 h-12" />}
-              title="Customize Design"
-              description="Choose a template and customize colors, fonts, and layout"
-            />
-            <StepCard
-              number="03"
-              icon={<Link2 className="w-12 h-12" />}
-              title="Publish & Share"
-              description="Get your custom URL and share your portfolio with the world"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Template Showcase */}
-      <section id="templates" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Beautiful Templates for Every Professional
-            </h2>
-            <p className="text-xl text-gray-700">
-              Choose from our curated collection
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <TemplateCard
-              name="Modern Developer"
-              category="Developer"
-              imageUrl="https://images.unsplash.com/photo-1566915896913-549d796d2166?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TemplateCard
-              name="Creative Designer"
-              category="Designer"
-              imageUrl="https://images.unsplash.com/photo-1728281144091-b743062a9bf0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TemplateCard
-              name="Marketing Pro"
-              category="Marketing"
-              imageUrl="https://images.unsplash.com/photo-1613759612065-d5971d32ca49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TemplateCard
-              name="Business Executive"
-              category="Business"
-              imageUrl="https://images.unsplash.com/photo-1631247022917-53f9af27d719?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TemplateCard
-              name="Data Scientist"
-              category="Data"
-              imageUrl="https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TemplateCard
-              name="Product Manager"
-              category="Product"
-              imageUrl="https://images.unsplash.com/photo-1617529497832-5ad49d9b5928?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section id="showcase" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Loved by Professionals Worldwide
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <TestimonialCard
-              quote="Folioo transformed my job search. I got 3x more interview requests after sharing my portfolio!"
-              name="Sarah Chen"
-              title="Software Engineer"
-              company="Google"
-              imageUrl="https://images.unsplash.com/photo-1652471949169-9c587e8898cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TestimonialCard
-              quote="The AI-powered conversion is amazing. It took my boring resume and made it into something beautiful."
-              name="Michael Rodriguez"
-              title="Product Designer"
-              company="Airbnb"
-              imageUrl="https://images.unsplash.com/photo-1672685667592-0392f458f46f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-            <TestimonialCard
-              quote="I landed my dream job thanks to my Folioo portfolio. Highly recommend to all job seekers!"
-              name="Emily Watson"
-              title="Marketing Manager"
-              company="HubSpot"
-              imageUrl="https://images.unsplash.com/photo-1655249493799-9cee4fe983bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-gray-700">
-              Choose the plan that&apos;s right for you
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <PricingCard
-              name="Free"
-              price="$0"
-              period="forever"
-              features={[
-                "Basic portfolio website",
-                "1 template",
-                "Folioo subdomain",
-                "Basic analytics",
-              ]}
-              buttonText="Get Started Free"
-              onButtonClick={() => onNavigate("login")}
-            />
-            <PricingCard
-              name="Pro"
-              price="$9"
-              period="per month"
-              features={[
-                "Everything in Free",
-                "All premium templates",
-                "Custom domain",
-                "Advanced analytics",
-                "Priority support",
-                "Remove Folioo branding",
-              ]}
-              buttonText="Start Free Trial"
-              featured={true}
-              onButtonClick={() => onNavigate("login")}
-            />
-            <PricingCard
-              name="Enterprise"
-              price="Custom"
-              period=""
-              features={[
-                "Everything in Pro",
-                "Custom templates",
-                "Team collaboration",
-                "API access",
-                "Dedicated support",
-              ]}
-              buttonText="Contact Sales"
-              onButtonClick={() => onNavigate("login")}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            Ready to Build Your Portfolio?
+  return (
+    <section ref={ref} className="py-24 px-6 lg:px-10">
+      <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_1.5fr] gap-16 items-start">
+        <div className={`sticky top-32 ${vis ? 'anim-in' : 'opacity-0'}`}>
+          <h2 className="text-[clamp(2.5rem,4vw,4rem)] font-normal leading-[1.1] mb-8">
+            Features that <br />
+            <span className="italic text-[#c084fc]">speak for themselves</span>
           </h2>
-          <p className="text-xl text-white/90 mb-8">
-            Join thousands of professionals who&apos;ve transformed their
-            careers with Folioo
+          <p className="text-white/40 text-lg font-light mb-8 max-w-md">
+            Everything you need to stand out in today&apos;s competitive job market, packaged in one seamless platform.
           </p>
-          <button
-            onClick={() => onNavigate("login")}
-            className="px-8 py-4 bg-white text-[#4f46e5] rounded-xl font-semibold text-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-          >
-            Get Started - It&apos;s Free
-          </button>
-          <p className="text-white/80 text-sm mt-4">No credit card required</p>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-full bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">F</span>
-                </div>
-                <span className="text-2xl font-bold">Folioo</span>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Transform your resume into a stunning portfolio website
-              </p>
-              <div className="flex gap-4">
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  Twitter
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  LinkedIn
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a
-                    href="#features"
-                    className="hover:text-white transition-colors"
-                  >
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#templates"
-                    className="hover:text-white transition-colors"
-                  >
-                    Templates
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#pricing"
-                    className="hover:text-white transition-colors"
-                  >
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Changelog
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Community
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Partners
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
-              © 2026 Folioo. All rights reserved.
-            </p>
-            <div className="flex gap-6 text-sm text-gray-400">
-              <a href="#" className="hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Terms of Service
-              </a>
-              <a href="#" className="hover:text-white transition-colors">
-                Cookie Policy
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description }) {
-  return (
-    <div className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all">
-      <div className="w-16 h-16 rounded-xl bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] flex items-center justify-center text-white mb-6">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-700">{description}</p>
-    </div>
-  );
-}
-
-function StepCard({ number, icon, title, description }) {
-  return (
-    <div className="text-center">
-      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white text-3xl font-bold mb-6">
-        {number}
-      </div>
-      <div className="flex justify-center mb-4 text-[#4f46e5]">{icon}</div>
-      <h3 className="text-2xl font-semibold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-700">{description}</p>
-    </div>
-  );
-}
-
-function TemplateCard({ name, category, imageUrl }) {
-  return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all group">
-      <div className="aspect-[4/3] overflow-hidden relative">
-        <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-linear-to-br from-[#4f46e5]/80 via-[#7c3aed]/80 to-[#fb923c]/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <button className="px-6 py-3 bg-white text-[#4f46e5] rounded-lg font-semibold transform translate-y-4 group-hover:translate-y-0 transition-transform">
-            View Demo
+          <button className="px-6 py-3 rounded-full border border-white/20 text-sm hover:bg-white/5 transition-colors">
+            View all features
           </button>
         </div>
+
+        {/* The Grid with images filling the cards like the Nymera reference */}
+        <div className="grid grid-cols-2 gap-4">
+          {features.map((f, i) => (
+            <SpotlightCard key={f.title} className={`aspect-[4/5] bg-[#0c0c0c] rounded-3xl overflow-hidden border border-white/5 group flex flex-col ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 100}ms` }}>
+              <div className="flex-1 relative overflow-hidden">
+                <img 
+                  src={f.img} 
+                  alt={f.title} 
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] to-transparent" />
+              </div>
+              <div className="p-8 pt-0 relative z-10">
+                <h3 className="text-xl mb-1">{f.title}</h3>
+                <p className="text-white/30 text-sm font-light">{f.desc}</p>
+              </div>
+            </SpotlightCard>
+          ))}
+        </div>
       </div>
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">{name}</h3>
-        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-          {category}
-        </span>
-      </div>
-    </div>
+    </section>
   );
 }
 
-function TestimonialCard({ quote, name, title, company, imageUrl }) {
+/* ═══════════════════ PROCESS ═══════════════════ */
+function Process() {
+  const [ref, vis] = useInView();
+  
   return (
-    <div className="bg-white p-8 rounded-2xl border-l-4 border-[#4f46e5] shadow-md">
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 fill-[#fb923c] text-[#fb923c]" />
-        ))}
+    <section id="process" ref={ref} className="py-24 px-6 lg:px-10 border-t border-white/5 bg-[#050505]">
+      <div className="max-w-[1400px] mx-auto">
+        <div className={`mb-16 ${vis ? 'anim-in' : 'opacity-0'}`}>
+          <h2 className="text-4xl font-normal">The <span className="italic text-[#c084fc]">Process</span></h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { icon: <Upload size={24}/>, title: "Upload", desc: "Drop your PDF or DOCX resume. Our AI reads it in seconds." },
+            { icon: <Palette size={24}/>, title: "Customize", desc: "Select a template, tweak colors, and adjust typography." },
+            { icon: <Globe size={24}/>, title: "Publish", desc: "Go live with a custom link and start sharing immediately." }
+          ].map((step, i) => (
+            <SpotlightCard key={step.title} className={`p-8 rounded-3xl bg-[#0c0c0c] border border-white/5 ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 100}ms` }}>
+              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-[#c084fc] mb-6">
+                {step.icon}
+              </div>
+              <h3 className="text-2xl mb-3">{step.title}</h3>
+              <p className="text-white/40 font-light leading-relaxed">{step.desc}</p>
+            </SpotlightCard>
+          ))}
+        </div>
       </div>
-      <p className="text-gray-700 italic mb-6">&ldquo;{quote}&rdquo;</p>
-      <div className="flex items-center gap-4">
-        <Image
-          src={imageUrl}
-          alt={name}
-          width={48}
-          height={48}
-          className="w-12 h-12 rounded-full object-cover"
-        />
+    </section>
+  );
+}
+
+/* ═══════════════════ TEMPLATES ═══════════════════ */
+function Templates() {
+  const [ref, vis] = useInView();
+  return (
+    <section id="work" ref={ref} className="py-24 px-6 lg:px-10 border-t border-white/5">
+      <div className="max-w-[1400px] mx-auto">
+        <div className={`flex justify-between items-end mb-16 ${vis ? 'anim-in' : 'opacity-0'}`}>
+          <h2 className="text-4xl font-normal">Selected <span className="italic text-[#c084fc]">Templates</span></h2>
+          <button className="hidden sm:flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors">
+            View all <ArrowUpRight size={16} />
+          </button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* RESTORED PREVIOUS IMAGES (modern.png and editorial.png) */}
+          {[
+            { img: "/modern.png", title: "Modern Developer" },
+            { img: "/editorial.png", title: "Creative Editorial" }
+          ].map((tpl, i) => (
+            <div key={tpl.title} className={`group cursor-pointer ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 150}ms` }}>
+              <SpotlightCard className="rounded-3xl overflow-hidden bg-[#111] aspect-[4/3] relative mb-6 border border-white/5">
+                <img src={tpl.img} alt={tpl.title} className="object-cover object-top w-full h-full opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+              </SpotlightCard>
+              <div className="flex justify-between items-center px-2">
+                <h3 className="text-xl font-normal">{tpl.title}</h3>
+                <ArrowUpRight className="text-white/20 group-hover:text-[#c084fc] transition-colors" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════ PRICING ═══════════════════ */
+function Pricing({ onNavigate }) {
+  const [ref, vis] = useInView();
+  return (
+    <section id="pricing" ref={ref} className="py-32 px-6 lg:px-10 bg-[#050505]">
+      <div className="max-w-[1400px] mx-auto">
+        <div className={`text-center mb-20 ${vis ? 'anim-in' : 'opacity-0'}`}>
+          <h2 className="text-[clamp(2.5rem,4vw,4rem)] font-normal mb-6">
+            Simple <span className="italic text-[#c084fc]">Pricing</span>
+          </h2>
+          <p className="text-white/40 text-lg font-light">Start for free, upgrade when you need to.</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {[
+            { name: "Free", price: "$0", desc: "Perfect to get started.", feats: ["1 Portfolio", "Basic Templates", "Folioo Subdomain"] },
+            { name: "Pro", price: "$9", desc: "For serious professionals.", feats: ["Unlimited Portfolios", "Premium Templates", "Custom Domains", "Analytics"], highlight: true }
+          ].map((plan, i) => (
+            <SpotlightCard key={plan.name} className={`p-10 rounded-3xl ${plan.highlight ? 'bg-gradient-to-b from-[#111] to-[#0a0a0a] border border-[#c084fc]/30 shadow-2xl shadow-[#c084fc]/5' : 'bg-[#0c0c0c] border border-white/5'} ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 100}ms` }}>
+              <h3 className="text-2xl font-normal mb-2">{plan.name}</h3>
+              <p className="text-white/40 mb-8">{plan.desc}</p>
+              <div className="text-5xl font-light mb-10">{plan.price}<span className="text-lg text-white/20">/mo</span></div>
+              
+              <ul className="space-y-4 mb-10">
+                {plan.feats.map(f => (
+                  <li key={f} className="flex items-center gap-3 text-white/60 font-light">
+                    <Check size={18} className="text-[#c084fc]" /> {f}
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={() => onNavigate("login")}
+                className={`w-full py-4 rounded-full font-medium transition-colors ${plan.highlight ? 'bg-[#c084fc] text-[#0a0a0a] hover:bg-[#d8b4fe]' : 'bg-white/5 hover:bg-white/10 relative z-20'}`}
+              >
+                Get Started
+              </button>
+            </SpotlightCard>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════ FOOTER ═══════════════════ */
+function Footer() {
+  return (
+    <footer className="bg-[#0a0a0a] py-16 px-6 lg:px-10 border-t border-white/5">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div>
-          <p className="font-semibold text-gray-900">{name}</p>
-          <p className="text-sm text-gray-600">{title}</p>
-          <p className="text-sm text-gray-500">{company}</p>
+          <img src="/folioo_logo.png" alt="Folioo" width="90" height="90" className="object-contain opacity-80" />
+        </div>
+        <div className="flex gap-8 text-sm text-white/40 font-light">
+          <a href="#" className="hover:text-white transition-colors relative z-20">Twitter</a>
+          <a href="#" className="hover:text-white transition-colors relative z-20">LinkedIn</a>
+          <a href="#" className="hover:text-white transition-colors relative z-20">Dribbble</a>
         </div>
       </div>
-    </div>
-  );
-}
-
-function PricingCard({
-  name,
-  price,
-  period,
-  features,
-  buttonText,
-  featured = false,
-  onButtonClick,
-}) {
-  return (
-    <div
-      className={`bg-white p-8 rounded-2xl ${
-        featured
-          ? "border-2 border-[#4f46e5] shadow-xl scale-105"
-          : "border border-gray-200"
-      }`}
-    >
-      {featured && (
-        <div className="inline-block px-3 py-1 bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-full text-sm font-semibold mb-4">
-          Most Popular
-        </div>
-      )}
-      <h3 className="text-2xl font-bold text-gray-900 mb-2">{name}</h3>
-      <div className="mb-6">
-        <span className="text-5xl font-bold text-gray-900">{price}</span>
-        {period && <span className="text-gray-600 ml-2">{period}</span>}
-      </div>
-      <ul className="space-y-3 mb-8">
-        {features.map((feature, index) => (
-          <li key={index} className="flex items-start gap-3">
-            <Check className="w-5 h-5 text-[#10b981] shrink-0 mt-0.5" />
-            <span className="text-gray-700">{feature}</span>
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={onButtonClick}
-        className={`w-full py-3 rounded-xl font-semibold transition-all ${
-          featured
-            ? "bg-linear-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white hover:shadow-lg hover:-translate-y-0.5"
-            : "bg-gray-100 text-gray-900 hover:bg-gray-200"
-        }`}
-      >
-        {buttonText}
-      </button>
-    </div>
+    </footer>
   );
 }
