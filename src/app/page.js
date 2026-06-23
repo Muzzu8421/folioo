@@ -105,7 +105,7 @@ function Hero({ dest }) {
 
         <div className="relative anim-in d3">
           <SpotlightCard className="rounded-3xl border border-white/5 bg-[#111] p-2">
-            <div className="rounded-2xl overflow-hidden relative aspect-[4/3] bg-[#050505]">
+            <div className="rounded-2xl overflow-hidden relative aspect-video bg-[#050505]">
               <video 
                 src="/Folioo.mp4"
                 autoPlay
@@ -285,7 +285,7 @@ function Templates() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* RESTORED PREVIOUS IMAGES (modern.png and editorial.png) */}
           {[
-            { img: "/modern.png", title: "Modern Developer" },
+            { img: "/Modern.png", title: "Modern Developer" },
             { img: "/editorial.png", title: "Creative Editorial" }
           ].map((tpl, i) => (
             <div key={tpl.title} className={`group cursor-pointer ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 150}ms` }}>
