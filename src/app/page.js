@@ -107,14 +107,13 @@ function Hero({ dest }) {
           <SpotlightCard className="rounded-3xl border border-white/5 bg-[#111] p-2">
             <div className="rounded-2xl overflow-hidden relative aspect-[4/3] bg-[#050505]">
               <video 
+                src="/Folioo.mp4"
                 autoPlay
                 loop
                 muted
                 playsInline
                 className="object-cover object-top w-full h-full group-hover:scale-105 transition-transform duration-1000" 
-              >
-                <source src="/Folioo.mp4" type="video/mp4" />
-              </video>
+              />
             </div>
           </SpotlightCard>
         </div>
