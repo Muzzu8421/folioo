@@ -316,7 +316,7 @@ export default function Terminal({ details }) {
           overflow-x: auto;
         }
 
-        .code-line { display: block; white-space: pre-wrap; line-height: 1.6; }
+        .code-line { display: block; white-space: pre; line-height: 1.6; }
         .code-block { display: block; margin-bottom: 0; }
 
         .c-kw   { color: var(--c-kw); }

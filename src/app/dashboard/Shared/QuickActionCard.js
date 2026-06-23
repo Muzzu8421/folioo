@@ -1,6 +1,6 @@
-export default function QuickActionCard({ icon, title, description }) {
+export default function QuickActionCard({ icon, title, description, onClick }) {
   return (
-    <button className="flex items-start gap-3 p-4 border border-white/5 rounded-2xl hover:border-[#c084fc]/50 hover:bg-white/5 transition-all text-left cursor-pointer">
+    <button onClick={onClick} className="flex items-start gap-3 p-4 border border-white/5 rounded-2xl hover:border-[#c084fc]/50 hover:bg-white/5 transition-all text-left cursor-pointer w-full">
       <div className="w-10 h-10 rounded-full bg-[#c084fc]/10 flex items-center justify-center text-[#c084fc] flex-shrink-0">
         {icon}
       </div>

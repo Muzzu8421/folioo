@@ -1,31 +1,14 @@
-import { Eye, Link2, Upload, TrendingUp } from "lucide-react";
+import { Eye, Link2, TrendingUp } from "lucide-react";
 import StatCard from "../Shared/StatCard";
-import { useEffect, useState } from "react";
 
-export default function StatsOverview() {
-
-  const [analytics, setanalytics] = useState({});
-
-  //Get the data of the Analytics from the Active Portfolio
-  useEffect(() => {
-    const load = async () => {
-      const res = await fetch("/api/analytics/get-active-portfolio", {
-        method: "GET",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setanalytics(data.analytics);
-      } else {
-        console.log(res.status);
-      }
-    };
-    load();
-  }, []);
-  
+export default function StatsOverview({ analytics = {} }) {
   const views = analytics.views || 0; 
   const clicks = analytics.clicks || 0;
+  
+  const engagementRate = views > 0 ? ((clicks / views) * 100).toFixed(1) : 0;
+
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <StatCard
         icon={<Eye className="w-6 h-6" />}
         value={views}
@@ -41,15 +24,8 @@ export default function StatsOverview() {
         positive
       />
       <StatCard
-        icon={<Upload className="w-6 h-6" />}
-        value="45"
-        label="Downloads"
-        trend={-3.1}
-        positive={false}
-      />
-      <StatCard
         icon={<TrendingUp className="w-6 h-6" />}
-        value="12.4%"
+        value={`${engagementRate}%`}
         label="Engagement Rate"
         trend={5.3}
         positive

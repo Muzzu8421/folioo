@@ -57,6 +57,7 @@ function CustomizeContent() {
     if (!stored) {
       toast.error("No portfolio data found. Please go back and try again.", {
         position: "top-right",
+        theme: "dark",
         transition: Bounce,
       });
       return;
@@ -84,12 +85,14 @@ function CustomizeContent() {
       toast.success("Portfolio published!", {
         position: "top-right",
         autoClose: 2000,
+        theme: "dark",
         transition: Bounce,
       });
       router.push("/dashboard");
     } catch (err) {
       toast.error(err.message || "Failed to publish", {
         position: "top-right",
+        theme: "dark",
         transition: Bounce,
       });
     } finally {
@@ -104,21 +107,21 @@ function CustomizeContent() {
         <div>
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors mb-3"
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors mb-3"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Review
           </button>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-gray-200">
             Choose a Template
           </h2>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-400 mt-1">
             Pick how your portfolio looks to the world
           </p>
         </div>
         <button
           onClick={handlePublish}
           disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-60 mt-8"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#c084fc] via-[#a855f7] to-[#ec4899] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-60 mt-8"
         >
           {saving ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -130,19 +133,19 @@ function CustomizeContent() {
       </div>
 
       {/* ── Public URL banner ── */}
-      <div className="flex items-center gap-3 px-5 py-3.5 bg-white rounded-2xl border border-gray-200">
-        <Globe className="w-4 h-4 text-[#4f46e5] shrink-0" />
+      <div className="flex items-center gap-3 px-5 py-3.5 bg-[#111111] rounded-2xl border border-white/5">
+        <Globe className="w-4 h-4 text-[#c084fc] shrink-0" />
         <span className="text-sm text-gray-500">
           Your portfolio will be live at
         </span>
-        <span className="text-sm font-semibold text-gray-900">
+        <span className="text-sm font-semibold text-gray-200">
           /portfolio/{username}
         </span>
         <a
           href={`/portfolio/${username}`}
           target="_blank"
           rel="noreferrer"
-          className="ml-auto text-gray-400 hover:text-[#4f46e5] transition-colors"
+          className="ml-auto text-gray-400 hover:text-[#c084fc] transition-colors"
         >
           <ExternalLink className="w-4 h-4" />
         </a>
@@ -156,12 +159,12 @@ function CustomizeContent() {
             onClick={() => setSelected(template.id)}
             className={`text-left rounded-2xl border-2 overflow-hidden transition-all hover:shadow-lg ${
               selected === template.id
-                ? "border-[#4f46e5] shadow-lg shadow-indigo-100"
-                : "border-gray-200 hover:border-gray-300"
+                ? "border-[#4f46e5] shadow-lg shadow-[#c084fc]/20"
+                : "border-white/5 hover:border-white/10"
             }`}
           >
             {/* Mockup */}
-            <div className="h-44 relative bg-gray-900 flex items-center justify-center">
+            <div className="h-44 relative bg-[#0a0a0a] flex items-center justify-center">
               <Image
                 src={"/" + template.id + ".png"}
                 alt={template.name}
@@ -172,14 +175,14 @@ function CustomizeContent() {
 
             {/* Info */}
             <div
-              className={`p-4 transition-colors ${selected === template.id ? "bg-indigo-50" : "bg-white"}`}
+              className={`p-4 transition-colors ${selected === template.id ? "bg-[#c084fc]/10" : "bg-[#111111]"}`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="font-semibold text-gray-900 text-sm">
+                <span className="font-semibold text-gray-200 text-sm">
                   {template.name}
                 </span>
                 {selected === template.id && (
-                  <span className="text-xs font-semibold text-[#4f46e5]">
+                  <span className="text-xs font-semibold text-[#c084fc]">
                     Selected
                   </span>
                 )}
@@ -191,7 +194,7 @@ function CustomizeContent() {
                 {template.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium"
+                    className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-400 font-medium"
                   >
                     {tag}
                   </span>
@@ -210,7 +213,7 @@ function CustomizeContent() {
         <button
           onClick={handlePublish}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#c084fc] via-[#a855f7] to-[#ec4899] text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-60"
         >
           {saving ? (
             <Loader2 className="w-4 h-4 animate-spin" />

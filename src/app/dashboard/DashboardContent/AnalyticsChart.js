@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -8,17 +9,40 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const chartData = [
-  { date: "Jan 5", views: 120, clicks: 15 },
-  { date: "Jan 10", views: 180, clicks: 22 },
-  { date: "Jan 15", views: 240, clicks: 35 },
-  { date: "Jan 20", views: 290, clicks: 42 },
-  { date: "Jan 25", views: 350, clicks: 48 },
-  { date: "Jan 30", views: 420, clicks: 58 },
-  { date: "Feb 4", views: 520, clicks: 75 },
-];
+export default function AnalyticsChart({ analytics = {} }) {
+  const chartData = useMemo(() => {
+    // We want the last 7 days including today
+    const dataMap = {};
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      dataMap[dateStr] = { date: dateStr, views: 0, clicks: 0 };
+    }
 
-export default function AnalyticsChart() {
+    if (analytics.viewhistory) {
+      analytics.viewhistory.forEach(dateStr => {
+        const d = new Date(dateStr);
+        const key = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        if (dataMap[key]) {
+          dataMap[key].views += 1;
+        }
+      });
+    }
+
+    if (analytics.clickhistory) {
+      analytics.clickhistory.forEach(dateStr => {
+        const d = new Date(dateStr);
+        const key = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        if (dataMap[key]) {
+          dataMap[key].clicks += 1;
+        }
+      });
+    }
+
+    return Object.values(dataMap);
+  }, [analytics]);
+
   return (
     <div className="bg-[#111111] rounded-3xl p-6 border border-white/5">
       <h3 className="text-xl font-medium text-gray-200 mb-6">
@@ -29,7 +53,7 @@ export default function AnalyticsChart() {
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#ffffff0d" />
             <XAxis dataKey="date" stroke="#4B5563" axisLine={false} tickLine={false} />
-            <YAxis stroke="#4B5563" axisLine={false} tickLine={false} />
+            <YAxis stroke="#4B5563" axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#111111",

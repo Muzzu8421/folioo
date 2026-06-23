@@ -52,6 +52,8 @@ export default function Editorial({ details }) {
           font-family: 'Lato', sans-serif;
           font-weight: 300;
           overflow-x: hidden;
+          overflow-wrap: break-word;
+          word-break: break-word;
         }
 
         /* ── CSS vars ── */

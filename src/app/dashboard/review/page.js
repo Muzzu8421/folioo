@@ -35,7 +35,7 @@ function ReviewContent() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#4f46e5]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#c084fc]" />
       </div>
     );
   }
@@ -54,20 +54,20 @@ function ReviewContent() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Review Portfolio</h2>
-          <p className="text-gray-600 mt-1">Edit the information extracted from your resume</p>
+          <h2 className="text-2xl font-bold text-gray-200">Review Portfolio</h2>
+          <p className="text-gray-400 mt-1">Edit the information extracted from your resume</p>
         </div>
         <button
           onClick={handleNext}
-          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#c084fc] via-[#a855f7] to-[#ec4899] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
         >
           Next — Choose Template <ArrowRight className="w-4 h-4" />
         </button>
       </div>
 
       {/* ── Personal Info ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h3 className="font-semibold text-gray-900">Personal Information</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h3 className="font-semibold text-gray-200">Personal Information</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             ["Full Name",     "fullName"],
@@ -87,7 +87,7 @@ function ReviewContent() {
                 onChange={(e) =>
                   setDetails({ ...details, personalInfo: { ...details.personalInfo, [key]: e.target.value } })
                 }
-                className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
               />
             </div>
           ))}
@@ -95,25 +95,25 @@ function ReviewContent() {
       </div>
 
       {/* ── Summary ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-3">
-        <h3 className="font-semibold text-gray-900">Professional Summary</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-3">
+        <h3 className="font-semibold text-gray-200">Professional Summary</h3>
         <textarea
           rows={4}
           value={details.summary ?? ""}
           onChange={(e) => setDetails({ ...details, summary: e.target.value })}
-          className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] resize-y transition-all"
+          className="w-full bg-[#0a0a0a] px-3 py-2 rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] resize-y transition-all"
         />
       </div>
 
       {/* ── Experience ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h3 className="font-semibold text-gray-900">Experience</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h3 className="font-semibold text-gray-200">Experience</h3>
 
         {details.experience?.map((exp, i) => (
-          <div key={i} className="relative p-4 rounded-2xl border border-gray-200 bg-gray-50 space-y-3">
+          <div key={i} className="relative p-4 rounded-2xl border border-white/5 bg-[#0a0a0a] space-y-3">
             <button
               onClick={() => setDetails({ ...details, experience: details.experience.filter((_, j) => j !== i) })}
-              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -135,7 +135,7 @@ function ReviewContent() {
                       updated[i] = { ...updated[i], [key]: e.target.value };
                       setDetails({ ...details, experience: updated });
                     }}
-                    className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                    className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                   />
                 </div>
               ))}
@@ -150,7 +150,7 @@ function ReviewContent() {
                   updated[i] = { ...updated[i], description: e.target.value };
                   setDetails({ ...details, experience: updated });
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] resize-y transition-all"
+                className="w-full bg-[#0a0a0a] px-3 py-2 rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] resize-y transition-all"
               />
             </div>
           </div>
@@ -160,21 +160,21 @@ function ReviewContent() {
           onClick={() =>
             setDetails({ ...details, experience: [...(details.experience ?? []), { company: "", position: "", location: "", startDate: "", endDate: "", current: false, description: "", achievements: [], technologies: [] }] })
           }
-          className="flex items-center gap-2 text-sm font-semibold text-[#4f46e5] hover:text-[#7c3aed] transition-colors"
+          className="flex items-center gap-2 text-sm font-semibold text-[#c084fc] hover:text-[#7c3aed] transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Experience
         </button>
       </div>
 
       {/* ── Education ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h3 className="font-semibold text-gray-900">Education</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h3 className="font-semibold text-gray-200">Education</h3>
 
         {details.education?.map((edu, i) => (
-          <div key={i} className="relative p-4 rounded-2xl border border-gray-200 bg-gray-50 space-y-3">
+          <div key={i} className="relative p-4 rounded-2xl border border-white/5 bg-[#0a0a0a] space-y-3">
             <button
               onClick={() => setDetails({ ...details, education: details.education.filter((_, j) => j !== i) })}
-              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -198,7 +198,7 @@ function ReviewContent() {
                       updated[i] = { ...updated[i], [key]: e.target.value };
                       setDetails({ ...details, education: updated });
                     }}
-                    className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                    className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                   />
                 </div>
               ))}
@@ -210,26 +210,26 @@ function ReviewContent() {
           onClick={() =>
             setDetails({ ...details, education: [...(details.education ?? []), { institution: "", degree: "", field: "", location: "", startDate: "", endDate: "", gpa: "", achievements: [] }] })
           }
-          className="flex items-center gap-2 text-sm font-semibold text-[#4f46e5] hover:text-[#7c3aed] transition-colors"
+          className="flex items-center gap-2 text-sm font-semibold text-[#c084fc] hover:text-[#7c3aed] transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Education
         </button>
       </div>
 
       {/* ── Skills ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-6">
-        <h3 className="font-semibold text-gray-900">Skills</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-6">
+        <h3 className="font-semibold text-gray-200">Skills</h3>
 
         <div className="space-y-3">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Technical</p>
           {details.skills?.technical?.map((cat, i) => (
-            <div key={i} className="relative p-4 rounded-2xl border border-gray-200 bg-gray-50 space-y-3">
+            <div key={i} className="relative p-4 rounded-2xl border border-white/5 bg-[#0a0a0a] space-y-3">
               <button
                 onClick={() => {
                   const updated = details.skills.technical.filter((_, j) => j !== i);
                   setDetails({ ...details, skills: { ...details.skills, technical: updated } });
                 }}
-                className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -243,7 +243,7 @@ function ReviewContent() {
                     updated[i] = { ...updated[i], category: e.target.value };
                     setDetails({ ...details, skills: { ...details.skills, technical: updated } });
                   }}
-                  className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                  className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -256,7 +256,7 @@ function ReviewContent() {
                     updated[i] = { ...updated[i], items: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) };
                     setDetails({ ...details, skills: { ...details.skills, technical: updated } });
                   }}
-                  className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                  className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                 />
               </div>
             </div>
@@ -266,7 +266,7 @@ function ReviewContent() {
               const updated = [...(details.skills?.technical ?? []), { category: "", items: [] }];
               setDetails({ ...details, skills: { ...details.skills, technical: updated } });
             }}
-            className="flex items-center gap-2 text-sm font-semibold text-[#4f46e5] hover:text-[#7c3aed] transition-colors"
+            className="flex items-center gap-2 text-sm font-semibold text-[#c084fc] hover:text-[#7c3aed] transition-colors"
           >
             <Plus className="w-4 h-4" /> Add Category
           </button>
@@ -280,20 +280,20 @@ function ReviewContent() {
             onChange={(e) =>
               setDetails({ ...details, skills: { ...details.skills, soft: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) } })
             }
-            className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+            className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
           />
         </div>
       </div>
 
       {/* ── Certifications ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h3 className="font-semibold text-gray-900">Certifications</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h3 className="font-semibold text-gray-200">Certifications</h3>
 
         {details.certifications?.map((cert, i) => (
-          <div key={i} className="relative p-4 rounded-2xl border border-gray-200 bg-gray-50">
+          <div key={i} className="relative p-4 rounded-2xl border border-white/5 bg-[#0a0a0a]">
             <button
               onClick={() => setDetails({ ...details, certifications: details.certifications.filter((_, j) => j !== i) })}
-              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -315,7 +315,7 @@ function ReviewContent() {
                       updated[i] = { ...updated[i], [key]: e.target.value };
                       setDetails({ ...details, certifications: updated });
                     }}
-                    className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                    className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                   />
                 </div>
               ))}
@@ -327,21 +327,21 @@ function ReviewContent() {
           onClick={() =>
             setDetails({ ...details, certifications: [...(details.certifications ?? []), { name: "", issuer: "", date: "", credentialId: "", url: "" }] })
           }
-          className="flex items-center gap-2 text-sm font-semibold text-[#4f46e5] hover:text-[#7c3aed] transition-colors"
+          className="flex items-center gap-2 text-sm font-semibold text-[#c084fc] hover:text-[#7c3aed] transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Certification
         </button>
       </div>
 
       {/* ── Awards ── */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h3 className="font-semibold text-gray-900">Awards</h3>
+      <div className="bg-[#111111] rounded-2xl border border-white/5 p-6 space-y-4">
+        <h3 className="font-semibold text-gray-200">Awards</h3>
 
         {details.awards?.map((award, i) => (
-          <div key={i} className="relative p-4 rounded-2xl border border-gray-200 bg-gray-50 space-y-3">
+          <div key={i} className="relative p-4 rounded-2xl border border-white/5 bg-[#0a0a0a] space-y-3">
             <button
               onClick={() => setDetails({ ...details, awards: details.awards.filter((_, j) => j !== i) })}
-              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -357,7 +357,7 @@ function ReviewContent() {
                       updated[i] = { ...updated[i], [key]: e.target.value };
                       setDetails({ ...details, awards: updated });
                     }}
-                    className="px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] transition-all"
+                    className="px-3 py-2 bg-[#0a0a0a] rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] transition-all"
                   />
                 </div>
               ))}
@@ -372,7 +372,7 @@ function ReviewContent() {
                   updated[i] = { ...updated[i], description: e.target.value };
                   setDetails({ ...details, awards: updated });
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#4f46e5] resize-y transition-all"
+                className="w-full bg-[#0a0a0a] px-3 py-2 rounded-xl border border-white/5 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#c084fc] resize-y transition-all"
               />
             </div>
           </div>
@@ -382,7 +382,7 @@ function ReviewContent() {
           onClick={() =>
             setDetails({ ...details, awards: [...(details.awards ?? []), { title: "", issuer: "", date: "", description: "" }] })
           }
-          className="flex items-center gap-2 text-sm font-semibold text-[#4f46e5] hover:text-[#7c3aed] transition-colors"
+          className="flex items-center gap-2 text-sm font-semibold text-[#c084fc] hover:text-[#7c3aed] transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Award
         </button>
@@ -392,7 +392,7 @@ function ReviewContent() {
       <div className="flex justify-end pb-8">
         <button
           onClick={handleNext}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#4f46e5] via-[#7c3aed] to-[#fb923c] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#c084fc] via-[#a855f7] to-[#ec4899] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
         >
           Next — Choose Template <ArrowRight className="w-4 h-4" />
         </button>
@@ -406,7 +406,7 @@ export default function ReviewPage() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-[#4f46e5]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#c084fc]" />
       </div>
     }>
       <ReviewContent />

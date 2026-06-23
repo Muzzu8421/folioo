@@ -49,7 +49,7 @@ export default function Dashboard({ onNavigate }) {
 
         <main className="p-4 sm:p-6 lg:p-8">
           {activePage === "dashboard" && (
-            <DashboardContent userName={userData.name} />
+            <DashboardContent userName={userData.name} setActivePage={setActivePage} />
           )}
 
           {activePage === "settings" && <SettingsContent />}

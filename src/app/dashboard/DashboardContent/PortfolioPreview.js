@@ -30,11 +30,18 @@ export default function PortfolioPreview({ userName }) {
         {/* Portfolio Preview */}
         <div className="flex-shrink-0">
           <div className="w-full lg:w-64 aspect-video rounded-xl overflow-hidden border-2 border-white/10">
-            <img
-              src="https://images.unsplash.com/photo-1727686679920-79be3ffe07d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080"
-              alt="Portfolio preview"
-              className="w-full h-full object-cover"
-            />
+            {link ? (
+              <div className="relative w-full h-full pointer-events-none overflow-hidden">
+                <iframe
+                  src={link}
+                  title="Portfolio Preview"
+                  className="absolute top-0 left-0 w-[400%] h-[400%] border-0 origin-top-left"
+                  style={{ transform: "scale(0.25)" }}
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full bg-[#222222]"></div>
+            )}
           </div>
         </div>
 
