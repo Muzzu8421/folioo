@@ -36,10 +36,10 @@ const TemplatesManager = () => {
           {/* Mockup */}
           <div className="h-44 relative bg-black/40 flex items-center justify-center border-b border-white/5">
             <Image
-              src={"/" + template.id + ".png"}
+              src={"/" + (template.id === 'modern' ? 'Modern' : template.id) + ".png"}
               alt={template.name}
               fill
-              className="object-cover"
+              className="object-cover object-top"
             />
           </div>
 

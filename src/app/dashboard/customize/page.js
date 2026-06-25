@@ -166,10 +166,10 @@ function CustomizeContent() {
             {/* Mockup */}
             <div className="h-44 relative bg-[#0a0a0a] flex items-center justify-center">
               <Image
-                src={"/" + template.id + ".png"}
+                src={"/" + (template.id === 'modern' ? 'Modern' : template.id) + ".png"}
                 alt={template.name}
                 fill
-                className="object-fill"
+                className="object-cover object-top"
               />
             </div>
 
