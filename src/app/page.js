@@ -289,8 +289,8 @@ function Templates() {
             { img: "/editorial.png", title: "Creative Editorial" }
           ].map((tpl, i) => (
             <div key={tpl.title} className={`group cursor-pointer ${vis ? 'anim-in' : 'opacity-0'}`} style={{ animationDelay: `${i * 150}ms` }}>
-              <SpotlightCard className="rounded-3xl overflow-hidden bg-[#111] aspect-video relative mb-6 border border-white/5">
-                <img src={tpl.img} alt={tpl.title} className="object-cover object-top w-full h-full opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+              <SpotlightCard className="rounded-3xl overflow-hidden bg-[#111] relative mb-6 border border-white/5">
+                <img src={tpl.img} alt={tpl.title} className="w-full h-auto block origin-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
               </SpotlightCard>
               <div className="flex justify-between items-center px-2">
                 <h3 className="text-xl font-normal">{tpl.title}</h3>
